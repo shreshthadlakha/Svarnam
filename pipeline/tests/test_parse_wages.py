@@ -134,3 +134,16 @@ def test_real_annualization_ap_ploughing_fy2006_07(tmp_path):
     fy_re = re.compile(r"\d{4}-\d{2}")
     assert all(fy_re.fullmatch(r["fy"]) for r in rows)
     assert any(r["state"] == "All India" for r in rows)
+
+
+@requires_raw
+def test_raw_anchor_ap_jan_2023_24_ploughing_tilling():
+    """CONTRACT §Verification anchors — restored during parent reconciliation.
+    The original author's search missed it because the occupation label ends
+    with ' workers'; row verified present in raw on 2026-11-21."""
+    rows = [r for r in _read_raw()
+            if r["year"] == "2023-2024" and r["month"] == "Jan"
+            and r["state"] == "ANDHRA PRADESH" and r["group"] == "Agriculture"
+            and r["occupation"] == "Ploughing/Tilling workers"]
+    assert rows, "AP Jan 2023-24 Ploughing/Tilling workers row missing from raw"
+    assert float(rows[0]["male"]) == 593.38

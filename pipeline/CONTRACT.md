@@ -28,6 +28,6 @@ Every parser emits ONE file per series into `data/interim/`. Rules (CODE-STRUCTU
 - T133: FY1986-87 avg = 12.7782; FY1990-91 avg = **17.9428** (not 17.9427 — file is truth); FY2025-26 avg = 88.3071
 - LBMA: first row 1968-04-01 = 37.70; last row 2026-09-25; merged total = 14,691 unique dates
 - DEXINUS: first 1973-01-02 = 8.02; last 2026-11-13 = 94.24; 14,054 data lines of which 13,501 numeric (missing days are '.')
-- Goldhub: USD 1978-01 = 207.83 (n=586); INR first 2005-10 = 21584.0711/oz (n=253) → 6939.42 ₹/10g
+- Goldhub: USD 1978-01 = 207.83 (n=586); INR first 2005-10 = 21584.0711/oz (n=253) → 6939.44 ₹/10g via units (the 6939.42 stated earlier was hand-rounding — units.py is truth). Layout truth (verified by probe 2026-11-21): the date sits in the unlabeled column C (one LEFT of the 'USD' header label) and each currency's values sit directly under its own label column — do NOT apply a blanket +1 offset; locate columns by header name and verify against the anchors
 - WRRI: AP Jan 2006-2007 Ploughing = 79.90; AP Jan 2023-2024 Ploughing/Tilling = 593.38; 97,310 raw rows
 - MSP: wheat crop-year 2024-25 = 2425; 2025-26 = 2585; paddy common 2025-26 = 2369; tur 2026-27 fixed = 8450
