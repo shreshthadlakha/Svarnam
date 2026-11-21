@@ -8,12 +8,16 @@ data/**
 # ...and checksums that pin the raw downloads
 !data/rbi/
 !data/rbi/SHA256SUMS.txt
-# ...and the pinned Goldhub-derived interims — committed so the CI runner can build
-#     without the login-gated Goldhub raw file (refresh.py --ci reuses them;
-#     data/interim stays ignored except these two files)
+# ...and pinned baseline interims — committed so the CI runner can ALWAYS build,
+#     even when a live fetch fails (staleness is flagged in refresh_report.txt)
 !data/interim/
 !data/interim/gold_usd_monthly.csv
 !data/interim/gold_inr_domestic_monthly.csv
+!data/interim/gold_inr_annual.csv
+!data/interim/fx_annual.csv
+!data/interim/wage_annual.csv
+!data/interim/msp_annual.csv
+!data/interim/fx_daily.csv
 
 # --- workspace-only evidence and tooling ---
 research/

@@ -1,5 +1,5 @@
 Rupee Gold Stack — quarterly refresh report
-mode: dry-run    generated: 2026-11-21T14:22:23Z
+mode: dry-run    generated: 2026-11-21T14:27:24Z
 
 == plan ==
 refresh plan (mode: dry-run)

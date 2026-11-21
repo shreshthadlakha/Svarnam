@@ -33,7 +33,7 @@ def _read(name, numeric=()):
     return out
 
 
-def build(write=True):
+def build(write=True, ci_mode=False):
     cal = policy_mod.load_duty_calendar()
     breaks = policy_mod.load_breaks()
     episodes = policy_mod.load_episodes()
@@ -56,7 +56,7 @@ def build(write=True):
     ratios_wage = derive.gold_per_wageday(decomp_annual, wage_all_india)
     ratios_msp = derive.gold_per_mspkg(decomp_annual, msp_annual)
 
-    problems, notes, stats = validate_mod.run_all(decomp_annual, decomp_monthly)
+    problems, notes, stats = validate_mod.run_all(decomp_annual, decomp_monthly, ci_mode=ci_mode)
     if problems:
         txt = report_mod.render({"generated": "FAILED", "data_as_of": "FAILED",
                                  "generator_version": "1.0"}, stats, decomp_annual,

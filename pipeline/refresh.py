@@ -380,9 +380,9 @@ def run_fetches() -> tuple[list, list]:
 
 # ------------------------------------------------------------------- build
 
-def run_build() -> tuple[str, str]:
+def run_build(mode: str = "local") -> tuple[str, str]:
     try:
-        build_mod.build(write=True)
+        build_mod.build(write=True, ci_mode=(mode == "ci"))
     except SystemExit as exc:
         return "BUILD FAILED", str(exc)
     except Exception as exc:
@@ -441,7 +441,7 @@ def main(argv: list[str] | None = None) -> int:
         build_status, build_detail = "NOT RUN (dry-run)", "no build executed; dataset.json untouched"
     else:
         results, warnings = run_fetches()
-        build_status, build_detail = run_build()
+        build_status, build_detail = run_build(mode)
 
     report = render_report(mode, plan, results, warnings, build_status, build_detail)
     with open(REPORT_PATH, "w", encoding="utf-8") as f:

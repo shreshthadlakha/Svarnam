@@ -1,0 +1,44 @@
+# series: fx_annual
+# source: S04 RBI Handbook 2025-26 Table 133 (accessed 2026-11-20)
+# notes: usdinr_avg = period average; usdinr_endyear = end-year rate; regime eras per sheet notes: official 1986-87..1991-92, lerms 1992-93, fedai-market 1993-94..2011-12, rbi-ref 2012-13..2017-18, fbil 2018-19..
+fy,usdinr_avg,usdinr_endyear,regime_flag
+1986-87,12.7782,12.8882,official
+1987-88,12.9658,13.0318,official
+1988-89,14.4817,15.663,official
+1989-90,16.6492,17.3248,official
+1990-91,17.9428,19.6429,official
+1991-92,24.4737,31.2256,official
+1992-93,30.6488,31.2354,lerms
+1993-94,31.3655,31.3725,fedai-market
+1994-95,31.3986,31.495,fedai-market
+1995-96,33.4498,34.35,fedai-market
+1996-97,35.4999,35.915,fedai-market
+1997-98,37.1648,39.495,fedai-market
+1998-99,42.0706,42.435,fedai-market
+1999-00,43.3327,43.605,fedai-market
+2000-01,45.6844,46.64,fedai-market
+2001-02,47.6919,48.8,fedai-market
+2002-03,48.3953,47.505,fedai-market
+2003-04,45.9516,43.445,fedai-market
+2004-05,44.9315,43.755,fedai-market
+2005-06,44.2735,44.605,fedai-market
+2006-07,45.2495,43.595,fedai-market
+2007-08,40.2607,39.985,fedai-market
+2008-09,45.9933,50.945,fedai-market
+2009-10,47.4433,45.135,fedai-market
+2010-11,45.5626,44.645,fedai-market
+2011-12,47.9229,51.16,fedai-market
+2012-13,54.4099,54.3893,rbi-ref
+2013-14,60.5019,60.0998,rbi-ref
+2014-15,61.1436,62.5908,rbi-ref
+2015-16,65.4685,66.3329,rbi-ref
+2016-17,67.072,64.8386,rbi-ref
+2017-18,64.4549,65.0441,rbi-ref
+2018-19,69.9229,69.1713,fbil
+2019-20,70.897,75.3859,fbil
+2020-21,74.225,73.5047,fbil
+2021-22,74.5039,75.8071,fbil
+2022-23,80.3635,82.2169,fbil
+2023-24,82.7897,83.3739,fbil
+2024-25,84.5756,85.5814,fbil
+2025-26,88.3071,94.6543,fbil

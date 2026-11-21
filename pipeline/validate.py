@@ -39,8 +39,9 @@ def _check(cond, msg, problems):
         problems.append(msg)
 
 
-def validate_interims():
+def validate_interims(ci_mode=False):
     p = []
+    notes = []
 
     def need(name):
         rows = _read_interim(name)
@@ -78,10 +79,17 @@ def validate_interims():
         _check(len(fx) == 40, "T133 rows = %d, expected 40" % len(fx), p)
     stats["fx_annual_rows"] = len(fx)
 
-    # --- LBMA daily ---
-    lb = need("lbma_daily.csv")
+    # --- LBMA daily (raw licensed feed — NOT pinned to git; optional in CI baseline) ---
+    lb = _read_interim("lbma_daily.csv")
     stats["lbma_rows"] = len(lb) if lb else 0
-    if lb:
+    if lb is None:
+        if ci_mode:
+            notes.append("lbma_daily.csv absent in CI baseline — the raw LBMA feed is not pinned to git "
+                         "(ICE licensing: we redistribute derived outputs, not the feed). The daily "
+                         "overlay is not rebuilt in CI; dataset.json does not depend on it.")
+        else:
+            p.append("interim file missing or empty: lbma_daily.csv")
+    else:
         _check(lb[0]["date"] == "1968-04-01" and abs(float(lb[0]["usd_oz"]) - 37.70) < 0.005,
                "LBMA first row anchor mismatch", p)
         _check(lb[-1]["date"] == "2026-09-25", "LBMA last row != 2026-09-25", p)
@@ -139,7 +147,7 @@ def validate_interims():
         if ap:
             _check(ap[0]["n_months"] == "12", "wage FY2006-07 AP Ploughing n_months != 12", p)
 
-    return p, stats
+    return p, stats, notes
 
 
 def validate_calendar():
@@ -207,11 +215,12 @@ def validate_fx_crosscheck(gold_annual, fx_annual, tolerance_pct=1.0):
     return p, notes
 
 
-def run_all(decomp_annual=None, decomp_monthly=None):
+def run_all(decomp_annual=None, decomp_monthly=None, ci_mode=False):
     """Full validation. Returns (problems, notes, stats). problems non-empty = FAIL."""
     problems, notes = [], []
-    p, stats = validate_interims()
+    p, stats, inter_notes = validate_interims(ci_mode=ci_mode)
     problems += p
+    notes += inter_notes
     span, cal_problems, cal = validate_calendar()
     problems += cal_problems
     stats["calendar_span_days"] = span
