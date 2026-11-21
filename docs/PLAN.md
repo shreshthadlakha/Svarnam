@@ -34,7 +34,7 @@
 - `index.html` + charts + annotation shim + source table + CSV export + honesty labels + SGB card; mobile pass.
 - **Exit:** PRD acceptance criteria A1–A8 all pass (grep gate in CI). — A1–A7 verified (A7 gate in CI, tag-stripped copy); A8 (360 px device check) pending a real phone pass; per-element hover source-ids = polish item (page-level source table covers A1).
 
-### M5 — Launch (0.5 day, after M4) — READY, owner executes (create GitHub repo `rupee-gold-stack`, push master, enable Pages, post per LAUNCH-KIT §2)
+### M5 — Launch (0.5 day, after M4) — READY, owner executes: create GitHub repo `rupee-gold-stack`, push master, **connect Vercel (output dir `site` per vercel.json)**, run the [LAUNCH-KIT §4 smoke test](<LAUNCH-KIT.md>) on the live URL, post per LAUNCH-KIT §2. Every monthly refresh commit redeploys Vercel automatically.
 - README final; LAUNCH-KIT §2 LinkedIn post (pick hook, add screenshots); publish; pin repo link.
 - **Exit:** post live; repo public; "data as of" stamp correct.
 

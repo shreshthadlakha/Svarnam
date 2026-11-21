@@ -1,7 +1,8 @@
 name: pages
 on:
-  push:
-    branches: [main]
+  # OPT-IN alternative to Vercel (the owner's chosen host). Manual trigger only,
+  # so it never auto-runs-and-fails when GitHub Pages is not enabled.
+  workflow_dispatch:
 
 permissions:
   contents: read

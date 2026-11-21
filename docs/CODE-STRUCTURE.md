@@ -62,11 +62,13 @@ rupee-gold-stack/
 │       ├── js/csv.js            # FR9 client-side CSV export from dataset.json
 │       └── vendor/chart.umd.min.js   # pinned Chart.js 4 + SRI hash
 │
-├── Makefile                     # make build / make update / make serve / make test
+├── vercel.json                  # Vercel static config: outputDirectory=site, cache headers
+├── Makefile                     # make build / make update / make refresh / make serve / make test
 ├── .github/workflows/
-│   ├── ci.yml                   # pytest + blocklist grep gate (PRD A7) on PR
-│   └── pages.yml                # deploy site/ on push to main
-└── .gitignore                   # data/raw contents (too big/licensed) except checksums; interim; __pycache__
+│   ├── ci.yml                   # pytest + A7 advice-language gate on push/PR
+│   ├── refresh.yml              # MONTHLY auto-refresh: fetch → rebuild → commit (Vercel redeploys)
+│   └── pages.yml                # OPT-IN GitHub Pages alternative (workflow_dispatch only)
+└── .gitignore                   # data/raw contents (too big/licensed) except checksums + pinned interims; __pycache__
 ```
 
 ## 2. Data-flow contract between layers

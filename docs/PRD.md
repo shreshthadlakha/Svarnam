@@ -28,7 +28,7 @@ A static, honest, single-page web tool that decomposes India's rupee gold price 
 
 - **G1** Make the invisible legs of the rupee gold price visible and quantified, 1985-86 → today.
 - **G2** Every number on the page traceable to a named public source with URL and access date — the honesty moat.
-- **G3** Ship in 2–3 weekends, ₹0 cost, zero backend, fully offline-capable page.
+- **G3** Ship in 2–3 weekends, ₹0 cost (Vercel Hobby or GitHub Pages — both free for this non-commercial static project), zero backend, fully offline-capable page.
 - **G4** Distribution built-in: launch post format (price-chart hero) matches the genre that demonstrably travels in India.
 
 ## 5. Non-goals (locked — do not re-litigate at build time)

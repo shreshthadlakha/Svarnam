@@ -39,7 +39,7 @@ Owner actions at launch: create the GitHub repo `rupee-gold-stack`, push `master
 # Rupee Gold Stack
 What is ₹1.18 lakh / 10g of gold made of? Metal, dollar, tax, fear — decomposed, FY1985-86 → today.
 
-- Live tool: https://{user}.github.io/rupee-gold-stack/
+- Live tool: https://rupee-gold-stack.vercel.app (deploy via Vercel — LAUNCH-KIT §4)
 - [Data sources](site/sources.md) · [Download CSV](…) · [Methodology](docs/TECH-DESIGN.md)
 - **Model, not advice** (see DISCLAIMER.md) · no forecasts, no targets — by design
 - Built from public data only: RBI Handbook, LBMA, WGC Goldhub, Labour Bureau, CACP, FRED
@@ -49,11 +49,15 @@ What is ₹1.18 lakh / 10g of gold made of? Metal, dollar, tax, fear — decompo
 ## 4. Repo setup checklist
 
 - [ ] Create repo `rupee-gold-stack` (public)
+- [ ] Push `master` (`git remote add origin … && git push -u origin master`)
 - [ ] `LICENSE` = MIT (code) — chosen over GPL: a data-journalism artifact wants maximum reuse; Tessera stays GPL, different product class
 - [ ] `DATA-LICENSE.md` = CC BY 4.0 for `dataset.json` + charts; summarize third-party terms (LBMA/ICE display note, RBI public-sector reuse with attribution)
 - [ ] `DISCLAIMER.md` = §1 text
-- [ ] Enable GitHub Pages (workflow deploy from `site/`)
-- [ ] CI: pytest + blocklist grep gate
+- [ ] CI: pytest + blocklist grep gate (already in `.github/workflows/ci.yml`)
+- [ ] **Deploy on Vercel (chosen):** vercel.com → Add New → Project → Import `rupee-gold-stack` → Framework Preset: **Other**, Build Command: *(leave empty)*, **Output Directory: `site`** (also pinned in `vercel.json`) → Deploy. Live URL: `https://rupee-gold-stack.vercel.app`
+- [ ] **Smoke test the live URL:** hero ₹1,18,420.9 split (91.6/5.5/3.0/−3.0) · monthly toggle (2005-10→2026-10) · wage + crop selectors · calculator 600 → ≈0.0414 g · CSV button · footer stamp · phone check at 360 px (A8)
+- [ ] Verify the auto-loop: Actions → quarterly-refresh → Run workflow → refresh commit lands → **Vercel redeploys by itself** — that proves the monthly self-updating loop end-to-end
+- [ ] (Optional alternative: GitHub Pages via pages.yml — workflow_dispatch only; pick ONE canonical URL)
 - [ ] Branch protection off (solo), but CI required on main
 
 ## 5. Update runbook

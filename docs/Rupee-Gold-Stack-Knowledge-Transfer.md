@@ -16,7 +16,7 @@
 
 **Who builds:** Solo indie developer (India-based), owner of this workspace. Fits the established goals: resume weight + LinkedIn reach, "money, transparently modeled" brand coherence with the Money-Desk idea. Sequencing rule: **Tessera's ship gate stands** — this project's page build slots after Tessera ships (or as one deliberate weekend between projects); data-fetch work can run anytime in background.
 
-**Build cost:** 2–3 weekends. **Money cost:** ₹0 (GitHub Pages hosting, free data, no API keys).
+**Build cost:** 2–3 weekends. **Money cost:** ₹0 (Vercel Hobby hosting, free data, no API keys).
 
 ---
 
@@ -160,7 +160,7 @@ The Lorenzen tool has **zero detectable circulation** → the valuation-model ge
 ### Stack
 - Python 3.13 (bundled on the machine) + `pip install pandas openpyxl` (xlsx parsing; lxml for any HTML scraping)
 - Static page: plain HTML + one chart library (ECharts or Chart.js via CDN) — zero build step, zero backend
-- Hosting: GitHub Pages (owner already has a GitHub account from LightClip). Suggested repo name: `rupee-gold-stack` (working title; decide final name at launch)
+- Hosting: **Vercel Hobby (chosen by owner, 22 Nov 2026)** — static deploy of `site/` only via `vercel.json` (`outputDirectory: site`; docs/pipeline/data never served); connects to the GitHub repo and **auto-redeploys on every push, including the monthly auto-refresh commit**. Alternative kept: GitHub Pages (pages.yml, workflow_dispatch only). Repo name: `rupee-gold-stack`.
 - A real browser for the two bot-protected downloads (agent's browser_tool can do these)
 
 ### Weekend 1 — data pipeline
@@ -201,15 +201,21 @@ Mobile pass; minimal editable assumptions (e.g., "how many grams should a day's 
 
 ## 7. Sequencing & next actions (ordered)
 
-Standing rule: **Tessera's ship gate stands** (friend-Mac session + real .pub/.msg files). This project never touches Tessera's critical path. Data fetches (Weekend-1 steps 1-4) may run anytime in background; page build after Tessera ships or as one deliberate weekend.
+**Sequencing override (owner decision, 21-22 Nov 2026):** the Tessera ship-gate rule is lifted for this project — Rupee Gold Stack launches first, codebase fully separated from Tessera (S:\ untouched). Quarterly cadence replaced by **monthly automation** (refresh.yml + vercel.json; zero manual updates).
 
-Next actions, in order:
-1. ☐ Browser-fetch Goldhub xlsx + live LBMA JSON (agent can do; ~10 min)
-2. ☐ Download + parse WRRI (and optionally AWI)
-3. ☐ Digitize MSP archive (biggest manual chunk; wheat/rice/tur minimum)
-4. ☐ Pipeline script → dataset.json + sources.md
-5. ☐ Page build (Weekend 2 spec)
-6. ☐ Polish + LinkedIn launch (Weekend 3 spec)
+Status (all ☑ done, 21-22 Nov 2026):
+1. ☑ Goldhub xlsx + live LBMA tail fetched (owner browser + Wayback)
+2. ☑ WRRI extracted (97,310 rows) + AWI volume downloaded
+3. ☑ MSP clean-era table parsed + deep archive downloaded (OCR = V1.1)
+4. ☑ Pipeline → dataset.json (41 FY + 253 months, all invariants PASS)
+5. ☑ Page built + verified live in browser (97/97 tests, A7 gate in CI)
+6. ☑ Monthly auto-refresh + Vercel config committed
+
+Remaining (owner executes, ~20 min):
+1. ☐ Create GitHub repo `rupee-gold-stack`, push master
+2. ☐ Connect Vercel (LAUNCH-KIT §4) → live URL → smoke test + phone A8 check
+3. ☐ Trigger Actions → quarterly-refresh → Run workflow once → confirm the refresh commit + Vercel auto-redeploy
+4. ☐ LinkedIn launch per LAUNCH-KIT §2; delete the throwaway Goldhub account
 
 ---
 
@@ -225,7 +231,8 @@ Next actions, in order:
 - `data/msp/` — 26 deep-history archive compendiums (1982-83→2010-11, OCR needed) + 6 born-digital reports + full URL manifest
 - `data/policy/` — `duty_calendar.csv` / `breaks.csv` / `episodes.csv` (every row sourced, validated)
 - `pipeline/` — the build system (parsers → derive → validate → build), all tests green
-- `site/dataset.json` + `site/sources.md` + `build_report.txt` — v0.1 build output: 41 FY decomposition (1985-86→2025-26) + 253 monthly (2005-10→2026-10) + ratio anchors, all invariants PASS (2026-11-21)
+- `site/` — index.html + charts + calculator + CSV export; renders ONLY from `dataset.json`; deployed on Vercel (`vercel.json`: outputDirectory=site, cache headers)
+- `site/dataset.json` + `site/sources.md` + `build_report.txt` — v1 build output: 41 FY decomposition (1985-86→2025-26) + 253 monthly (2005-10→2026-10) + ratio anchors, all invariants PASS (2026-11-22)
 
 **Portability:** copy `docs/` + `research/` + `data/` together. That is the whole project state.
 

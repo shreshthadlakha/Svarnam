@@ -156,9 +156,10 @@ Schema rules: every row carries `source`; `flags` is the honesty channel (`stitc
 
 ## 7. Hosting & deployment
 
-- GitHub Pages from `/site` via `.github/workflows/pages.yml` (deploy on push to main). No server, no env vars, no secrets.
-- No analytics in V1. If ever wanted, privacy-preserving only — decision deferred.
-- Repo: `rupee-gold-stack` (working title). License: **MIT for code, CC BY 4.0 for dataset & charts** (rationale in LAUNCH-KIT §4).
+- **Vercel (chosen by owner, 2026-11-22):** static deploy of `/site` only — `vercel.json` pins `outputDirectory: site` (docs/, pipeline/, data/ are never served), sets `Cache-Control: must-revalidate` on `dataset.json`/`sources.md` (fresh data on every visit) and `immutable` on the vendored Chart.js. Flow: connect the GitHub repo on vercel.com → every push to main redeploys → **the monthly auto-refresh commit redeploys the site automatically** (Vercel watches the repo; no Vercel-side cron needed). Hobby plan is free for this non-commercial project.
+- Alternative kept: GitHub Pages via `.github/workflows/pages.yml` — switched to `workflow_dispatch`-only so it never auto-runs against a non-enabled Pages repo. Either host, never both live without choosing a canonical URL.
+- No server, no env vars, no secrets, no analytics in V1. If ever wanted, privacy-preserving only — decision deferred.
+- Repo: `rupee-gold-stack`. License: **MIT for code, CC BY 4.0 for dataset & charts** (rationale in LAUNCH-KIT §4).
 
 ## 8. Testing strategy
 
