@@ -1,5 +1,5 @@
 RUPEE GOLD STACK — BUILD REPORT
-generated: 2026-11-21T13:57:39Z   data_as_of: 2026-11-21   generator: 1.0
+generated: 2026-11-21T15:01:27Z   data_as_of: 2026-11-21   generator: 1.0
 validation: PASS — zero problems
 
 == interim row counts ==
@@ -37,5 +37,8 @@ validation: PASS — zero problems
   - FX cross-check 2015-16 diverges +0.33% (within tolerance; noted)
   - FX cross-check 2023-24 diverges -0.49% (within tolerance; noted)
   - FX cross-check 2025-26 diverges +0.52% (within tolerance; noted)
+  - gold domestic monthly: Goldhub pin last 2026-10, T164 interim last 2026-04 — merged series last 2026-10 (+0 t164-extension months)
+  - T164↔Goldhub continuity cross-check: 49 overlap months (2022-04..2026-04), mean abs diff 0.11% — within the 1% tolerance
+  - gold USD monthly: Goldhub pin last 2026-10, merged series last 2026-10 (+0 lbma-derived months)
 
 Reporting day: 2026-11-21
