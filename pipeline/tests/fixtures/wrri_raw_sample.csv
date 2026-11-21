@@ -1,0 +1,21 @@
+year,month,state,group,occupation,male,female
+2006-2007,Jan,ANDHRA PRADESH,Agriculture,Ploughing,79.90,-
+2006-2007,Feb,ANDHRA PRADESH,Agriculture,Ploughing,81.10,@
+2006-2007,Mar,ANDHRA PRADESH,Agriculture,Ploughing,-,-
+2007-2008,Apr,ANDHRA PRADESH,Agriculture,Sowing,60.00,40.00
+2007-2008,May,ANDHRA PRADESH,Agriculture,Sowing,62.50,42.50
+2007-2008,Jun,ANDHRA PRADESH,Agriculture,Sowing,61.25,-
+2013-2014,Jul,ANDHRA PRADESH,Non-Agriculture,"Non-agricultural labourers(including porters, loaders)",150.00,100.00
+2022-2023,Jun,All India,Non-Agriculture,Sweeping/cleaning workers,300.00,250.00
+2008-2009,Jan,KERALA,Agriculture,Weeding,1.00,1.00
+2008-2009,Feb,KERALA,Agriculture,Weeding,2.00,2.00
+2008-2009,Mar,KERALA,Agriculture,Weeding,3.00,-
+2008-2009,Apr,KERALA,Agriculture,Weeding,4.00,4.00
+2008-2009,May,KERALA,Agriculture,Weeding,5.00,5.00
+2008-2009,Jun,KERALA,Agriculture,Weeding,6.00,-
+2008-2009,Jul,KERALA,Agriculture,Weeding,7.00,7.00
+2008-2009,Aug,KERALA,Agriculture,Weeding,8.00,8.00
+2008-2009,Sep,KERALA,Agriculture,Weeding,9.00,-
+2008-2009,Oct,KERALA,Agriculture,Weeding,10.00,10.00
+2008-2009,Nov,KERALA,Agriculture,Weeding,11.00,11.00
+2008-2009,Dec,KERALA,Agriculture,Weeding,12.00,12.00

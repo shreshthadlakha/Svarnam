@@ -22,11 +22,11 @@
 | 1.5 | Collect CACP MSP archive PDFs 1982-83→ (wheat/rice/tur) | owner (portal is bot-blocked for bulk) | clean table 2010-11→ direct |
 - **Exit:** `data/raw/` complete + checksummed; `sources.py` lists every file with URL + access date; Goldhub depth question answered in writing.
 
-### M2 — Pipeline core: decomposition (1 day, anytime)
+### M2 — Pipeline core: decomposition (1 day, anytime) — ✅ DONE 21 Nov 2026
 - `parse_rbi` (T35 + T133), `parse_goldhub`, `parse_lbma`, `parse_fred`, `units`, `sources`, `policy` (transcribe dive_05 duty table + breaks + episodes), `derive`, `validate`, `build`.
 - **Exit:** `site/dataset.json` v0.1 with decomposition FY1985-86→FY2025-26; all golden values pass; reconciliation invariant passes; `build_report.txt` shows zero unexplained gaps. (Tessera-critical: none of this touches S:\.)
 
-### M3 — Ratio anchors (0.5 day, after M1 wage/MSP data lands)
+### M3 — Ratio anchors (0.5 day, after M1 wage/MSP data lands) — ✅ DONE 21 Nov 2026 (clean-era MSP; deep-era = V1.1)
 - `parse_wages`, `parse_msp`; ratio series; flags (`stitched`, `lagged`, `break-2013` where applicable).
 - **Exit:** gold-per-wage-day (WRRI era) + gold-per-MSP-kg computed and validated; AWI extension either in or explicitly deferred to V2.
 

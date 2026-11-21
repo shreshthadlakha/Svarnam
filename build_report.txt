@@ -1,0 +1,41 @@
+RUPEE GOLD STACK — BUILD REPORT
+generated: 2026-11-21T13:19:56Z   data_as_of: 2026-11-21   generator: 1.0
+validation: PASS — zero problems
+
+== interim row counts ==
+  gold_annual_rows           41
+  fx_annual_rows             40
+  lbma_rows                  14691
+  fx_daily_rows              13501
+  usd_monthly_rows           586
+  inr_domestic_monthly_rows  253
+  msp_rows                   68
+  wage_rows                  9495
+  calendar_span_days         21073
+
+== decomposition coverage ==
+  annual : 1985-86 → 2025-26  (41 FYs)
+  monthly: 2005-10 → 2026-10  (253 months)
+  annual premium negative (discount) in 17 of 41 FYs
+
+== ratio anchors ==
+  gold_per_wageday: 416 rows (state=All India), FYs 2006-07→2023-24, occupations=40
+  gold_per_mspkg: 64 rows, crops=['Paddy Common', 'Paddy(F)/Grade A', 'Tur (Arhar)', 'Wheat']
+
+== known gaps & data notes (documented, not silent) ==
+  - MSP archive: 1985-86 volume absent everywhere; rabi MY 2011-12 healable via archive compendium (crop-year 2010-11 table column covers it)
+  - MSP deep history 1982-83→2010-11 needs OCR (archive PDFs are JBIG2 scans) — V1 ships clean era 2010-11→; deep era = V1.1
+  - WRRI: 2022-23 Jul–Dec not yet published upstream; 2013-14 partial (old-scheme-only months Jul–Oct); occupation labels break at Nov 2013 (no official linking factor)
+  - Monthly decomposition starts 2005-10 (Goldhub INR domestic column start) — annual spine covers 1985-86→
+  - Monthly metal leg = Goldhub USD monthly × DEXINUS H.10 NY market rate (not RBI official) — annual decomposition uses RBI T133 official/notes-flagged series
+  - LBMA live capture ends 2026-09-25; months after that covered by Goldhub USD monthly to 2026-10 — daily tail top-up is a runbook task
+  - FY1985-86 FX: T133 starts FY1986-87 — T35's own London-converted column used, flag t35-implied-fx
+  - Goldhub INR column = Indian DOMESTIC price (byte-verified vs T35 ±0.06%), NOT world price in rupees
+
+== tolerance notes ==
+  - FX cross-check 1991-92 diverges +1.03% — FY1991-92 straddles the July-1991 devaluation step change; T35 London-conversion basis diverges from annual average rate — documented divergence
+  - FX cross-check 2015-16 diverges +0.33% (within tolerance; noted)
+  - FX cross-check 2023-24 diverges -0.49% (within tolerance; noted)
+  - FX cross-check 2025-26 diverges +0.52% (within tolerance; noted)
+
+Reporting day: 2026-11-21

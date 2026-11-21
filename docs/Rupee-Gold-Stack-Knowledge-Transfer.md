@@ -224,6 +224,8 @@ Next actions, in order:
 - `data/wages/` — `wrri_raw.csv` (97,310 rows, extracted 21 Nov 2026) + `AWI-2023-24.pdf` + extractor script
 - `data/msp/` — 26 deep-history archive compendiums (1982-83→2010-11, OCR needed) + 6 born-digital reports + full URL manifest
 - `data/policy/` — `duty_calendar.csv` / `breaks.csv` / `episodes.csv` (every row sourced, validated)
+- `pipeline/` — the build system (parsers → derive → validate → build), all tests green
+- `site/dataset.json` + `site/sources.md` + `build_report.txt` — v0.1 build output: 41 FY decomposition (1985-86→2025-26) + 253 monthly (2005-10→2026-10) + ratio anchors, all invariants PASS (2026-11-21)
 
 **Portability:** copy `docs/` + `research/` + `data/` together. That is the whole project state.
 
