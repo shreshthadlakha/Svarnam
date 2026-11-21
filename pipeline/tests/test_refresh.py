@@ -22,8 +22,8 @@ def test_dry_run_plan_lists_all_source_steps():
     text = refresh.render_plan(plan, "dry-run")
     for needle in ("FRED", "LBMA", "CACP", "WRRI", "RBI"):  # the 5 automatable sources
         assert needle in text
-    assert "T35" in text and "T133" in text  # both Handbook tables planned
-    assert {s["id"] for s in plan} == {"S05", "S09", "S08", "S06", "S01", "S04", "S03"}
+    assert "T35" in text and "T133" in text and "T164" in text  # both Handbook tables planned
+    assert {s["id"] for s in plan} == {"S05", "S09", "S08", "S06", "S01", "S04", "S02", "S03"}
 
 
 def test_dry_run_plan_has_explicit_goldhub_skip():
@@ -44,7 +44,7 @@ def test_gitignore_pins_goldhub_derived_interims():
 def test_refresh_workflow_parses_with_cron_and_dispatch():
     with open(os.path.join(ROOT, ".github", "workflows", "refresh.yml"), encoding="utf-8") as f:
         text = f.read()
-    assert re.search(r"cron:\s*['\"]0 6 1 1,4,7,10 \*['\"]", text)
+    assert re.search(r"cron:\s*['\"]0 6 1 \* \*['\"]", text)
     assert "workflow_dispatch" in text
     assert "jobs:" in text and "steps:" in text
     try:
@@ -54,7 +54,7 @@ def test_refresh_workflow_parses_with_cron_and_dispatch():
     cfg = yaml.safe_load(text)
     triggers = cfg.get("on") if isinstance(cfg.get("on"), dict) else cfg.get(True)
     assert isinstance(triggers, dict)
-    assert triggers["schedule"][0]["cron"] == "0 6 1 1,4,7,10 *"
+    assert triggers["schedule"][0]["cron"] == "0 6 1 * *"
     assert "workflow_dispatch" in triggers
 
 

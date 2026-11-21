@@ -1,4 +1,4 @@
-"""Automated quarterly refresh for the Rupee Gold Stack.
+"""Automated monthly refresh for the Rupee Gold Stack.
 
 One command re-fetches every automatable source, validates + atomically replaces
 the raw file on disk (previous version kept as .bak), re-runs all parsers
@@ -18,9 +18,10 @@ What stays manual
     - S03 Goldhub: login-gated download -> the fetch is always skipped. When the
       raw xlsx is missing (CI), the pinned Goldhub-derived interim CSVs are reused
       as-is ("pinned Goldhub-derived interims reused, last pinned <date>").
-    - A new RBI Handbook edition drifts table numbers + file URLs -> fetch emits a
-      WARNING ("new Handbook edition - owner must update sources.py") and the
-      refresh continues with committed interims. Never silent.
+    - A new RBI Handbook edition drifts file URLs -> the pinned edition URL is
+      retried against the Handbook index page (discover_rbi_urls); if discovery
+      also fails the refresh warns ("RBI site structure changed - owner action")
+      and continues with committed interims. Never silent.
 
 Parsers stay pure readers (CONTRACT rule 6): all fetching lives in refresh_*()
 functions here, so importing this module never touches the network.
@@ -33,8 +34,10 @@ import os
 import re
 import subprocess
 import sys
+import urllib.error
 import urllib.request
 from datetime import datetime, timezone
+from urllib.parse import urljoin
 from typing import Callable
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -63,7 +66,32 @@ MSP_URL = "https://cacp.da.gov.in/json.json"
 RBI_EDITION_URLS = {
     "t35_gold_annual.xlsx": "https://rbi.org.in/Documents/HS-2025-26/T_35.xlsx",
     "t133_fx_fy.xlsx": "https://rbi.org.in/Documents/HS-2025-26/T_133.xlsx",
+    "t164_gold_monthly.xlsx": "https://rbi.org.in/Documents/HS-2025-26/T_164.xlsx",
 }
+
+# Handbook index page — the discovery fallback when a pinned edition URL is gone.
+RBI_INDEX_URL = ("https://rbi.org.in/Scripts/AnnualPublications.aspx"
+                 "?head=Handbook%20of%20Statistics%20on%20Indian%20Economy")
+RBI_TABLE_HREF_RE = re.compile(r"""(?i)(35|133|164)T_HBIE[^"']*\.XLSX""")
+
+
+def discover_rbi_urls(index_html: str,
+                      tables: tuple[str, ...] = ("35", "133", "164")) -> dict[str, str]:
+    """Pure: regex hrefs of the Handbook index page -> {table_no: absolute URL}.
+
+    Matches edition-pinned links like /Documents/HS-2025-26/T_164T_HBIE<ed>.XLSX
+    for the requested tables; first match per table wins (the index lists the
+    newest edition first); the digit guard keeps e.g. T_135 from matching 35.
+    """
+    found: dict[str, str] = {}
+    for href in re.findall(r"""href\s*=\s*["']([^"']+)["']""", index_html, re.IGNORECASE):
+        if not RBI_TABLE_HREF_RE.search(href):
+            continue
+        for table_no in tables:
+            if re.search(r"""(?i)(?<!\d)%sT_HBIE[^"']*\.XLSX""" % re.escape(table_no), href):
+                found.setdefault(table_no, urljoin("https://rbi.org.in/", href))
+                break
+    return found
 
 HTTP_TIMEOUT = 120
 WRRI_TIMEOUT = 1800  # WRRI "full" POSTs month x year-group queries; allow 30 min
@@ -176,12 +204,18 @@ def build_plan(mode: str = "local") -> list[dict]:
         {"id": "S01", "name": "RBI Handbook T35 (gold annual)", "action": "fetch+parse",
          "url": RBI_EDITION_URLS["t35_gold_annual.xlsx"], "target": str(parse_rbi.T35_PATH),
          "validate": "XLSX ZIP magic", "parser": "pipeline.parse_rbi.parse_gold",
-         "note": "HTTP failure -> WARNING 'new Handbook edition - owner must update sources.py'; "
-                 "committed interims kept (never silent)"},
+         "note": "pinned 404/410 -> Handbook index auto-discovery; discovery failure -> "
+                 "WARNING 'RBI site structure changed - owner action'; committed interims "
+                 "kept (never silent)"},
         {"id": "S04", "name": "RBI Handbook T133 (FX annual)", "action": "fetch+parse",
          "url": RBI_EDITION_URLS["t133_fx_fy.xlsx"], "target": str(parse_rbi.T133_PATH),
          "validate": "XLSX ZIP magic", "parser": "pipeline.parse_rbi.parse_fx",
          "note": "same edition-drift WARNING path as T35"},
+        {"id": "S02", "name": "RBI Handbook T164 (gold monthly)", "action": "fetch+parse",
+         "url": RBI_EDITION_URLS["t164_gold_monthly.xlsx"], "target": str(parse_rbi.T164_PATH),
+         "validate": "XLSX ZIP magic", "parser": "pipeline.parse_rbi.parse_t164",
+         "note": "pinned 404/410 -> Handbook index auto-discovery; discovery failure -> "
+                 "WARNING 'RBI site structure changed - owner action' (never silent)"},
         {"id": "S03", "name": "WGC Goldhub averages since 1978", "action": "skip",
          "url": "https://www.gold.org/goldhub/data/gold-prices",
          "target": "data/interim/gold_usd_monthly.csv + gold_inr_domestic_monthly.csv (pinned)",
@@ -304,27 +338,64 @@ def refresh_wrri(out: list, warnings: list) -> None:
                             "committed wage_annual.csv (never silent)" % (type(exc).__name__, exc))
 
 
+def _rbi_keep_pinned(out: list, warnings: list, sid: str, name: str, target: str,
+                     exc: Exception) -> None:
+    """Kept/missing path for a non-edition-drift fetch failure (pre-existing text)."""
+    had = os.path.exists(target)
+    _result(out, sid, name, "KEPT" if had else "MISSING",
+            "fetch failed: %s: %s%s" % (type(exc).__name__, exc,
+                                        "" if had else " (no raw file on disk)"))
+    warnings.append(
+        "WARNING: %s fetch failed (%s: %s) — new Handbook edition - owner must update "
+        "sources.py; continuing with %s (never silent)"
+        % (sid, type(exc).__name__, exc,
+           "committed interims" if had else "committed interims (raw file absent — CI build may fail on a missing interim)"))
+
+
+def _rbi_discovery_failed(out: list, warnings: list, sid: str, name: str, table_no: str,
+                          target: str, exc: Exception) -> None:
+    """Kept/missing path when the pinned URL was gone AND discovery also failed."""
+    had = os.path.exists(target)
+    _result(out, sid, name, "KEPT" if had else "MISSING",
+            "pinned %s URL gone, discovery failed: %s: %s%s"
+            % (table_no, type(exc).__name__, exc, "" if had else " (no raw file on disk)"))
+    warnings.append(
+        "WARNING: %s discovery failed after pinned-URL 404/410 (%s: %s) — RBI site "
+        "structure changed - owner action; continuing with committed interims (never silent)"
+        % (sid, type(exc).__name__, exc))
+
+
 def refresh_rbi(out: list, warnings: list) -> None:
     tables = (
-        ("S01", "RBI Handbook T35 (gold annual)", "t35_gold_annual.xlsx", parse_rbi.T35_PATH),
-        ("S04", "RBI Handbook T133 (FX annual)", "t133_fx_fy.xlsx", parse_rbi.T133_PATH),
+        ("S01", "RBI Handbook T35 (gold annual)", "t35_gold_annual.xlsx", "35", parse_rbi.T35_PATH),
+        ("S04", "RBI Handbook T133 (FX annual)", "t133_fx_fy.xlsx", "133", parse_rbi.T133_PATH),
+        ("S02", "RBI Handbook T164 (gold monthly)", "t164_gold_monthly.xlsx", "164", parse_rbi.T164_PATH),
     )
-    for sid, name, fname, target in tables:
+    for sid, name, fname, table_no, target in tables:
         try:
             data = http_get(RBI_EDITION_URLS[fname])
             atomic_replace(target, data, validate_xlsx)
             _result(out, sid, name, "FETCHED",
                     "%d bytes -> %s" % (len(data), os.path.basename(str(target))))
+        except urllib.error.HTTPError as exc:
+            if exc.code in (404, 410):
+                # edition drifted: re-aim at the Handbook index page, then download
+                try:
+                    html = http_get(RBI_INDEX_URL).decode("utf-8", "replace")
+                    url = discover_rbi_urls(html, tables=(table_no,)).get(table_no)
+                    if not url:
+                        raise RuntimeError("no %sT_HBIE*.XLSX href on the index page" % table_no)
+                    data = http_get(url)
+                    atomic_replace(target, data, validate_xlsx)
+                    _result(out, sid, name, "FETCHED (discovered edition)",
+                            "discovered %s at %s (edition auto-detected); %d bytes -> %s"
+                            % (table_no, url, len(data), os.path.basename(str(target))))
+                except Exception as exc2:
+                    _rbi_discovery_failed(out, warnings, sid, name, table_no, target, exc2)
+            else:
+                _rbi_keep_pinned(out, warnings, sid, name, target, exc)
         except Exception as exc:
-            had = os.path.exists(target)
-            _result(out, sid, name, "KEPT" if had else "MISSING",
-                    "fetch failed: %s: %s%s" % (type(exc).__name__, exc,
-                                                "" if had else " (no raw file on disk)"))
-            warnings.append(
-                "WARNING: %s fetch failed (%s: %s) — new Handbook edition - owner must update "
-                "sources.py; continuing with %s (never silent)"
-                % (sid, type(exc).__name__, exc,
-                   "committed interims" if had else "committed interims (raw file absent — CI build may fail on a missing interim)"))
+            _rbi_keep_pinned(out, warnings, sid, name, target, exc)
     # parse whichever tables are on disk (fetch may have updated one and not the other)
     if os.path.exists(parse_rbi.T35_PATH):
         try:
@@ -346,6 +417,16 @@ def refresh_rbi(out: list, warnings: list) -> None:
         except Exception as exc:
             _result(out, "S04", "parse_rbi.parse_fx", "PARSE FAILED",
                     "%s: %s (fx_annual.csv kept)" % (type(exc).__name__, exc))
+    if os.path.exists(parse_rbi.T164_PATH):
+        try:
+            rows = parse_rbi.parse_t164(parse_rbi.T164_PATH)
+            parse_rbi.write_csv(parse_rbi.T164_OUT, parse_rbi.T164_PROVENANCE,
+                                parse_rbi.T164_HEADER, rows)
+            _result(out, "S02", "parse_rbi.parse_t164", "PARSED",
+                    "%d rows -> gold_inr_mumbai_monthly_t164.csv" % len(rows))
+        except Exception as exc:
+            _result(out, "S02", "parse_rbi.parse_t164", "PARSE FAILED",
+                    "%s: %s (gold_inr_mumbai_monthly_t164.csv kept)" % (type(exc).__name__, exc))
 
 
 def refresh_goldhub(out: list, _warnings: list) -> None:
@@ -396,7 +477,7 @@ def run_build(mode: str = "local") -> tuple[str, str]:
 
 def render_report(mode: str, plan: list[dict], results: list | None, warnings: list | None,
                   build_status: str, build_detail: str) -> str:
-    lines = ["Rupee Gold Stack — quarterly refresh report",
+    lines = ["Rupee Gold Stack — monthly refresh report",
              "mode: %s    generated: %s"
              % (mode, datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")),
              "", "== plan ==", render_plan(plan, mode), ""]
@@ -424,7 +505,7 @@ def render_report(mode: str, plan: list[dict], results: list | None, warnings: l
 # --------------------------------------------------------------------- CLI
 
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(description="Rupee Gold Stack — automated quarterly refresh")
+    p = argparse.ArgumentParser(description="Rupee Gold Stack — automated monthly refresh")
     g = p.add_mutually_exclusive_group()
     g.add_argument("--dry-run", action="store_true",
                    help="print the plan, fetch nothing, run no build")

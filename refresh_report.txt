@@ -1,5 +1,5 @@
-Rupee Gold Stack — quarterly refresh report
-mode: dry-run    generated: 2026-11-21T14:27:24Z
+Rupee Gold Stack — monthly refresh report
+mode: dry-run    generated: 2026-11-21T14:59:26Z
 
 == plan ==
 refresh plan (mode: dry-run)
@@ -30,13 +30,19 @@ refresh plan (mode: dry-run)
     target:   C:\Users\shres\Downloads\Rupee-Gold-Stack\data\rbi\t35_gold_annual.xlsx
     validate: XLSX ZIP magic
     parser:   pipeline.parse_rbi.parse_gold
-    note:     HTTP failure -> WARNING 'new Handbook edition - owner must update sources.py'; committed interims kept (never silent)
+    note:     pinned 404/410 -> Handbook index auto-discovery; discovery failure -> WARNING 'RBI site structure changed - owner action'; committed interims kept (never silent)
 [S04] RBI Handbook T133 (FX annual) — fetch+parse
     url:      https://rbi.org.in/Documents/HS-2025-26/T_133.xlsx
     target:   C:\Users\shres\Downloads\Rupee-Gold-Stack\data\rbi\t133_fx_fy.xlsx
     validate: XLSX ZIP magic
     parser:   pipeline.parse_rbi.parse_fx
     note:     same edition-drift WARNING path as T35
+[S02] RBI Handbook T164 (gold monthly) — fetch+parse
+    url:      https://rbi.org.in/Documents/HS-2025-26/T_164.xlsx
+    target:   C:\Users\shres\Downloads\Rupee-Gold-Stack\data\rbi\t164_gold_monthly.xlsx
+    validate: XLSX ZIP magic
+    parser:   pipeline.parse_rbi.parse_t164
+    note:     pinned 404/410 -> Handbook index auto-discovery; discovery failure -> WARNING 'RBI site structure changed - owner action' (never silent)
 [S03] WGC Goldhub averages since 1978 — skip
     url:      https://www.gold.org/goldhub/data/gold-prices
     target:   data/interim/gold_usd_monthly.csv + gold_inr_domestic_monthly.csv (pinned)

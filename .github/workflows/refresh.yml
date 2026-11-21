@@ -1,4 +1,4 @@
-# Quarterly automated data refresh (docs/LAUNCH-KIT.md §5 runbook, automated portion).
+# Monthly automated data refresh (docs/LAUNCH-KIT.md §5 runbook, automated portion).
 # Fetches every automatable source, re-parses, rebuilds site/dataset.json and commits
 # the result. Goldhub stays manual (login-gated); a new RBI Handbook edition must be
 # wired by the owner (pipeline/sources.py + RBI_EDITION_URLS in pipeline/refresh.py).
@@ -6,8 +6,8 @@ name: quarterly-refresh
 
 on:
   schedule:
-    # 06:00 UTC on the first day of Jan / Apr / Jul / Oct (quarterly)
-    - cron: '0 6 1 1,4,7,10 *'
+    # 06:00 UTC on the first day of every month (monthly)
+    - cron: '0 6 1 * *'
   workflow_dispatch:
 
 permissions:

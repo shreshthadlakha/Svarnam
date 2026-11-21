@@ -92,14 +92,15 @@ def decomposition_monthly(domestic_monthly, usd_monthly, fx_daily, calendar):
     fx_m = defaultdict(list)
     for r in fx_daily:
         fx_m[r["date"][:7]].append(r["usdinr"])
-    usd = {r["month"]: r["usd_oz"] for r in usd_monthly}
+    usd = {r["month"]: r for r in usd_monthly}
     out = []
     for g in domestic_monthly:
         m = g["month"]
-        if m not in usd or m not in fx_m or not fx_m[m]:
+        u = usd.get(m)
+        if u is None or u["usd_oz"] is None or m not in fx_m or not fx_m[m]:
             continue
         rate = statistics.fmean(fx_m[m])
-        metal_fx = units.usd_oz_to_inr_10g(usd[m], rate)
+        metal_fx = units.usd_oz_to_inr_10g(u["usd_oz"], rate)
         y, mo = int(m[:4]), int(m[5:7])
         d1 = dt.date(y, mo, 1)
         d2 = dt.date(y + (mo == 12), (mo % 12) + 1, 1) - dt.timedelta(days=1)
@@ -107,13 +108,15 @@ def decomposition_monthly(domestic_monthly, usd_monthly, fx_daily, calendar):
         mumbai = g["inr_10g_domestic"]
         premium = mumbai - legs["landed_cost"]
         out.append({
-            "month": m, "mumbai_inr_10g": mumbai, "london_usd_oz": usd[m],
+            "month": m, "mumbai_inr_10g": mumbai, "london_usd_oz": u["usd_oz"],
             "usdinr": round(rate, 4), "metal_fx_leg": round(legs["metal_fx_leg"], 2),
             "duty_leg": round(legs["duty_leg"], 2), "gst_leg": round(legs["gst_leg"], 2),
             "landed_cost": round(legs["landed_cost"], 2),
             "premium_leg": round(premium, 2),
             "premium_pct": round(premium / legs["landed_cost"] * 100.0, 2),
-            "flags": ["goldhub-domestic", "fred-h10-fx"],
+            "flags": ["goldhub-domestic", "fred-h10-fx"]
+                     + [f for f in (g.get("source_flag"), u.get("source_flag"))
+                        if f in ("t164-extension", "lbma-derived")],
         })
     return out
 
