@@ -14,7 +14,7 @@ function rowsToCsv(rows) {
 
 function toCsv(data) {
   const out = [];
-  out.push('# rupee-gold-stack dataset export');
+  out.push('# svarnam dataset export');
   out.push('# generated: ' + data.meta.generated + ' | data_as_of: ' + data.meta.data_as_of + ' | provisional: ' + data.meta.provisional);
   out.push('');
   for (const [name, rows] of Object.entries(data.series)) {
@@ -45,7 +45,7 @@ export function wireCsv(data) {
     const blob = new Blob([toCsv(data)], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'rupee-gold-stack-dataset.csv';
+    a.download = 'svarnam-dataset.csv';
     document.body.appendChild(a);
     a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800);

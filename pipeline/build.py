@@ -180,7 +180,7 @@ def build(write=True, ci_mode=False):
             "generator_version": "1.0",
             "provisional": True,
             "data_as_of": "2026-11-21",
-            "repo": "rupee-gold-stack",
+            "repo": "svarnam",
         },
         "sources": [{"id": k, **v} for k, v in sorted(sources_mod.SOURCES.items())],
         "series": {

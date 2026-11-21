@@ -2,7 +2,7 @@
 
 The dataset (`site/dataset.json`), the CSV download derived from it, and the
 charts rendered from it are licensed **CC BY 4.0** — you may share and adapt
-them with attribution to "Rupee Gold Stack" and a link to the repository.
+them with attribution to "Svarnam" and a link to the repository.
 
 Attribution does not imply endorsement by any data provider.
 

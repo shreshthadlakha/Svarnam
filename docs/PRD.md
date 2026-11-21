@@ -1,7 +1,7 @@
-# Rupee Gold Stack — Product Requirements Document (PRD)
+# Svarnam — Product Requirements Document (PRD)
 
 **Version:** 1.0 · **Date:** 21 Nov 2026 · **Status:** Approved for build
-**Companion docs:** [TECH-DESIGN.md](TECH-DESIGN.md) · [CODE-STRUCTURE.md](CODE-STRUCTURE.md) · [PLAN.md](PLAN.md) · [LAUNCH-KIT.md](LAUNCH-KIT.md) · KT bundle: `docs/Rupee-Gold-Stack-Knowledge-Transfer.md`
+**Companion docs:** [TECH-DESIGN.md](TECH-DESIGN.md) · [CODE-STRUCTURE.md](CODE-STRUCTURE.md) · [PLAN.md](PLAN.md) · [LAUNCH-KIT.md](LAUNCH-KIT.md) · KT bundle: `docs/Svarnam-Knowledge-Transfer.md`
 
 ---
 

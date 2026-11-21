@@ -1,4 +1,4 @@
-Rupee Gold Stack — monthly refresh report
+Svarnam — monthly refresh report
 mode: dry-run    generated: 2026-11-21T14:59:26Z
 
 == plan ==
@@ -6,40 +6,40 @@ refresh plan (mode: dry-run)
 
 [S05] FRED DEXINUS (daily USD/INR) — fetch+parse
     url:      https://fred.stlouisfed.org/graph/fredgraph.csv?id=DEXINUS
-    target:   C:\Users\shres\Downloads\Rupee-Gold-Stack\data\rbi\dexinus_daily.csv
+    target:   C:\Users\shres\Downloads\Svarnam\data\rbi\dexinus_daily.csv
     validate: CSV header contains DEXINUS
     parser:   pipeline.parse_fred.main
 [S09] LBMA Gold Price PM (daily, via Wayback CDX) — fetch+parse
     url:      https://prices.lbma.org.uk/json/gold_pm.json
-    target:   C:\Users\shres\Downloads\Rupee-Gold-Stack\data\rbi\gold_pm_live.json
+    target:   C:\Users\shres\Downloads\Svarnam\data\rbi\gold_pm_live.json
     validate: JSON full-history dict (>=1000 dates)
     parser:   pipeline.parse_lbma.main (wb+live merge)
     note:     CDX query: latest 200-status capture -> web.archive.org/web/<ts>id_/ fetch; data/rbi/gold_pm_wb.json merged when present (CI fallback: live capture alone)
 [S08] CACP MSP feed — fetch+parse
     url:      https://cacp.da.gov.in/json.json
-    target:   C:\Users\shres\Downloads\Rupee-Gold-Stack\data\raw\msp\msp_table.html
+    target:   C:\Users\shres\Downloads\Svarnam\data\raw\msp\msp_table.html
     validate: JSON parse
     parser:   pipeline.parse_msp.main
 [S06] Labour Bureau WRRI (rural wages) — subprocess+parse
     url:      https://www.labourbureau.gov.in/rural-wages
-    target:   C:\Users\shres\Downloads\Rupee-Gold-Stack\data\wages\wrri_raw.csv
+    target:   C:\Users\shres\Downloads\Svarnam\data\wages\wrri_raw.csv
     validate: CSV header + data rows
     parser:   data/wages/_wrri_extract.py full -> pipeline.parse_wages.main
 [S01] RBI Handbook T35 (gold annual) — fetch+parse
     url:      https://rbi.org.in/Documents/HS-2025-26/T_35.xlsx
-    target:   C:\Users\shres\Downloads\Rupee-Gold-Stack\data\rbi\t35_gold_annual.xlsx
+    target:   C:\Users\shres\Downloads\Svarnam\data\rbi\t35_gold_annual.xlsx
     validate: XLSX ZIP magic
     parser:   pipeline.parse_rbi.parse_gold
     note:     pinned 404/410 -> Handbook index auto-discovery; discovery failure -> WARNING 'RBI site structure changed - owner action'; committed interims kept (never silent)
 [S04] RBI Handbook T133 (FX annual) — fetch+parse
     url:      https://rbi.org.in/Documents/HS-2025-26/T_133.xlsx
-    target:   C:\Users\shres\Downloads\Rupee-Gold-Stack\data\rbi\t133_fx_fy.xlsx
+    target:   C:\Users\shres\Downloads\Svarnam\data\rbi\t133_fx_fy.xlsx
     validate: XLSX ZIP magic
     parser:   pipeline.parse_rbi.parse_fx
     note:     same edition-drift WARNING path as T35
 [S02] RBI Handbook T164 (gold monthly) — fetch+parse
     url:      https://rbi.org.in/Documents/HS-2025-26/T_164.xlsx
-    target:   C:\Users\shres\Downloads\Rupee-Gold-Stack\data\rbi\t164_gold_monthly.xlsx
+    target:   C:\Users\shres\Downloads\Svarnam\data\rbi\t164_gold_monthly.xlsx
     validate: XLSX ZIP magic
     parser:   pipeline.parse_rbi.parse_t164
     note:     pinned 404/410 -> Handbook index auto-discovery; discovery failure -> WARNING 'RBI site structure changed - owner action' (never silent)

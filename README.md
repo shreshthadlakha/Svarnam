@@ -1,9 +1,9 @@
-# Rupee Gold Stack
+# Svarnam
 
 What is ₹1.18 lakh / 10g of gold made of? Metal, dollar, tax, fear — decomposed,
 FY1985-86 → today.
 
-- Live tool: https://rupee-gold-stack.vercel.app (deploy via Vercel — LAUNCH-KIT §4)
+- Live tool: https://svarnam.vercel.app (deploy via Vercel — LAUNCH-KIT §4)
 - [Data sources](site/sources.md) · [Download CSV](site/dataset.json) · [Methodology](docs/TECH-DESIGN.md)
 - **Model, not advice** (see [DISCLAIMER.md](DISCLAIMER.md)) · no forecasts, no targets — by design
 - Built from public data only: RBI Handbook, LBMA (via Wayback), WGC Goldhub, Labour Bureau, CACP, FRED

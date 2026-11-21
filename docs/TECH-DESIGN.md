@@ -1,4 +1,4 @@
-# Rupee Gold Stack — Technical Design
+# Svarnam — Technical Design
 
 **Version:** 1.0 · **Date:** 21 Nov 2026 · **Status:** Approved
 **Reads with:** [PRD.md](PRD.md) · [CODE-STRUCTURE.md](CODE-STRUCTURE.md) · KT bundle §3 (verified data spine) and §4 (verified fact base)
@@ -107,7 +107,7 @@ gold_per_mspkg(yr)   = (msp_inr_quintal(yr, crop) / 100) / (mumbai_inr_10g / 10)
 ```jsonc
 {
   "meta": { "generated": "ISO8601", "generator_version": "1.0", "provisional": true,
-             "data_as_of": "2026-11-21", "repo": "rupee-gold-stack" },
+             "data_as_of": "2026-11-21", "repo": "svarnam" },
   "sources": [ { "id": "S01", "name": "RBI Handbook of Statistics on the Indian Economy 2025-26, Table 35",
                  "url": "...", "coverage": "FY1985-86..FY2025-26", "accessed": "2026-11-20",
                  "license_note": "public sector reuse with attribution" } ],
@@ -159,7 +159,7 @@ Schema rules: every row carries `source`; `flags` is the honesty channel (`stitc
 - **Vercel (chosen by owner, 2026-11-22):** static deploy of `/site` only — `vercel.json` pins `outputDirectory: site` (docs/, pipeline/, data/ are never served), sets `Cache-Control: must-revalidate` on `dataset.json`/`sources.md` (fresh data on every visit) and `immutable` on the vendored Chart.js. Flow: connect the GitHub repo on vercel.com → every push to main redeploys → **the monthly auto-refresh commit redeploys the site automatically** (Vercel watches the repo; no Vercel-side cron needed). Hobby plan is free for this non-commercial project.
 - Alternative kept: GitHub Pages via `.github/workflows/pages.yml` — switched to `workflow_dispatch`-only so it never auto-runs against a non-enabled Pages repo. Either host, never both live without choosing a canonical URL.
 - No server, no env vars, no secrets, no analytics in V1. If ever wanted, privacy-preserving only — decision deferred.
-- Repo: `rupee-gold-stack`. License: **MIT for code, CC BY 4.0 for dataset & charts** (rationale in LAUNCH-KIT §4).
+- Repo: `svarnam`. License: **MIT for code, CC BY 4.0 for dataset & charts** (rationale in LAUNCH-KIT §4).
 
 ## 8. Testing strategy
 

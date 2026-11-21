@@ -1,4 +1,4 @@
-# Rupee Gold Stack — Master Knowledge Transfer
+# Svarnam — Master Knowledge Transfer
 
 **Version:** 1.0 · **Date of record:** 21 November 2026
 **Status:** APPROVED TO BUILD (GO verdict delivered 20 Nov 2026). V1 design locked. Nothing built yet — data spine verified, ~half the data already downloaded.
@@ -8,7 +8,7 @@
 
 ## 0. 60-second orientation
 
-**What:** "Rupee Gold Stack" — an interactive, static, single-page web tool that measures what one gram of gold buys in India against the real economy, and decomposes the domestic rupee gold price into its four legs: **metal** (global spot) + **dollar** (USD/INR) + **tax** (customs duty + GST) + **local premium/discount** (residual).
+**What:** "Svarnam" — an interactive, static, single-page web tool that measures what one gram of gold buys in India against the real economy, and decomposes the domestic rupee gold price into its four legs: **metal** (global spot) + **dollar** (USD/INR) + **tax** (customs duty + GST) + **local premium/discount** (residual).
 
 **Inspiration:** Nate Lorenzen's "Gold Standard" tool at https://lorenzen.ai/tools/gold-standard/ (US model: gold vs. cow + farmland anchors → fair value $2,921 vs. spot $3,628 = +24.2% "monetary premium"; honest provisional labels; editable assumptions; CSV download). His tool is a founder credibility artifact, not a business — and has **zero detectable circulation** (verified: no HN/Reddit/LinkedIn/X hits as of 20 Nov 2026).
 
@@ -160,7 +160,7 @@ The Lorenzen tool has **zero detectable circulation** → the valuation-model ge
 ### Stack
 - Python 3.13 (bundled on the machine) + `pip install pandas openpyxl` (xlsx parsing; lxml for any HTML scraping)
 - Static page: plain HTML + one chart library (ECharts or Chart.js via CDN) — zero build step, zero backend
-- Hosting: **Vercel Hobby (chosen by owner, 22 Nov 2026)** — static deploy of `site/` only via `vercel.json` (`outputDirectory: site`; docs/pipeline/data never served); connects to the GitHub repo and **auto-redeploys on every push, including the monthly auto-refresh commit**. Alternative kept: GitHub Pages (pages.yml, workflow_dispatch only). Repo name: `rupee-gold-stack`.
+- Hosting: **Vercel Hobby (chosen by owner, 22 Nov 2026)** — static deploy of `site/` only via `vercel.json` (`outputDirectory: site`; docs/pipeline/data never served); connects to the GitHub repo and **auto-redeploys on every push, including the monthly auto-refresh commit**. Alternative kept: GitHub Pages (pages.yml, workflow_dispatch only). Repo name: `svarnam`.
 - A real browser for the two bot-protected downloads (agent's browser_tool can do these)
 
 ### Weekend 1 — data pipeline
@@ -201,7 +201,7 @@ Mobile pass; minimal editable assumptions (e.g., "how many grams should a day's 
 
 ## 7. Sequencing & next actions (ordered)
 
-**Sequencing override (owner decision, 21-22 Nov 2026):** the Tessera ship-gate rule is lifted for this project — Rupee Gold Stack launches first, codebase fully separated from Tessera (S:\ untouched). Quarterly cadence replaced by **monthly automation** (refresh.yml + vercel.json; zero manual updates).
+**Sequencing override (owner decision, 21-22 Nov 2026):** the Tessera ship-gate rule is lifted for this project — Svarnam launches first, codebase fully separated from Tessera (S:\ untouched). Quarterly cadence replaced by **monthly automation** (refresh.yml + vercel.json; zero manual updates).
 
 Status (all ☑ done, 21-22 Nov 2026):
 1. ☑ Goldhub xlsx + live LBMA tail fetched (owner browser + Wayback)
@@ -212,7 +212,7 @@ Status (all ☑ done, 21-22 Nov 2026):
 6. ☑ Monthly auto-refresh + Vercel config committed
 
 Remaining (owner executes, ~20 min):
-1. ☐ Create GitHub repo `rupee-gold-stack`, push master
+1. ☐ Create GitHub repo `svarnam`, push master
 2. ☐ Connect Vercel (LAUNCH-KIT §4) → live URL → smoke test + phone A8 check
 3. ☐ Trigger Actions → quarterly-refresh → Run workflow once → confirm the refresh commit + Vercel auto-redeploy
 4. ☐ LinkedIn launch per LAUNCH-KIT §2; delete the throwaway Goldhub account
@@ -222,9 +222,9 @@ Remaining (owner executes, ~20 min):
 ## 8. Artifact map (where everything lives)
 
 **This workspace:**
-- `docs/Rupee-Gold-Stack-Knowledge-Transfer.md` — this document
+- `docs/Svarnam-Knowledge-Transfer.md` — this document
 - `docs/PRD.md` · `docs/TECH-DESIGN.md` · `docs/CODE-STRUCTURE.md` · `docs/PLAN.md` · `docs/LAUNCH-KIT.md` — the approved build doc suite (build-accuracy corrections applied 21 Nov 2026: ratio formulas, golden values, worked example, paths, duty time-weighting, grep-gate scoping)
-- `docs/Rupee-Gold-Stack-Conversation-Transcript.md` — verbatim decision-trail transcript
+- `docs/Svarnam-Conversation-Transcript.md` — verbatim decision-trail transcript
 - `research/dive_01.md` … `dive_06.md` — the six verification tracks (gold/FX sources, wages, MSP/mandi/livestock, land/housing, policy timeline, novelty)
 - `data/rbi/` — RBI Handbook tables (T35/T133/T164/T132/T205/T223) + LBMA (Wayback + live tail) + Goldhub averages + DEXINUS + `SHA256SUMS.txt`
 - `data/wages/` — `wrri_raw.csv` (97,310 rows, extracted 21 Nov 2026) + `AWI-2023-24.pdf` + extractor script

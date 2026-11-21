@@ -1,4 +1,4 @@
-"""Automated monthly refresh for the Rupee Gold Stack.
+"""Automated monthly refresh for the Svarnam.
 
 One command re-fetches every automatable source, validates + atomically replaces
 the raw file on disk (previous version kept as .bak), re-runs all parsers
@@ -159,7 +159,7 @@ def atomic_replace(target: str, data: bytes, validate: Callable[[bytes], None]) 
 
 def http_get(url: str) -> bytes:
     req = urllib.request.Request(
-        url, headers={"User-Agent": "Mozilla/5.0 (rupee-gold-stack quarterly refresh)"})
+        url, headers={"User-Agent": "Mozilla/5.0 (svarnam quarterly refresh)"})
     with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT) as resp:
         return resp.read()
 
@@ -477,7 +477,7 @@ def run_build(mode: str = "local") -> tuple[str, str]:
 
 def render_report(mode: str, plan: list[dict], results: list | None, warnings: list | None,
                   build_status: str, build_detail: str) -> str:
-    lines = ["Rupee Gold Stack — monthly refresh report",
+    lines = ["Svarnam — monthly refresh report",
              "mode: %s    generated: %s"
              % (mode, datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")),
              "", "== plan ==", render_plan(plan, mode), ""]
@@ -505,7 +505,7 @@ def render_report(mode: str, plan: list[dict], results: list | None, warnings: l
 # --------------------------------------------------------------------- CLI
 
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(description="Rupee Gold Stack — automated monthly refresh")
+    p = argparse.ArgumentParser(description="Svarnam — automated monthly refresh")
     g = p.add_mutually_exclusive_group()
     g.add_argument("--dry-run", action="store_true",
                    help="print the plan, fetch nothing, run no build")

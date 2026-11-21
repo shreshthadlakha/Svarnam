@@ -1,8 +1,10 @@
-# Conversation Transcript — Rupee Gold Stack
+# Conversation Transcript — Svarnam
+
+> *Rename note (22 Nov 2026): the project was renamed to **Svarnam** on the owner's decision. Occurrences of the former name ("Rupee Gold Stack") in the conversation below are historical record — the mechanical rename was applied afterward and is visible in the committed diff.*
 
 **Session dates:** 20–21 November 2026
 **Participants:** User (solo indie developer, India) · Agent (AutoClaw)
-**Subject:** Dissecting lorenzen.ai's "Gold Standard" tool, evaluating and designing an India version ("Rupee Gold Stack"), full data verification, build plan, and knowledge-transfer documents.
+**Subject:** Dissecting lorenzen.ai's "Gold Standard" tool, evaluating and designing an India version ("Svarnam"), full data verification, build plan, and knowledge-transfer documents.
 
 **Method note:** All **User** and **Agent** text below is verbatim, word for word, from the session — including the agent's short progress notes streamed between tool calls. Internal tool activity (web searches, page fetches, file reads/writes, subagent dispatches, memory writes) is not conversation and is represented by brief bracketed annotations like *[agent ran 2 searches + fetched 2 pages]*. Nothing in the User/Agent blocks has been paraphrased, reordered, or trimmed. Attachments quoted in full where they were the substance of the turn.
 
@@ -526,11 +528,11 @@ Understood and logged. Guy 2's state-wise layer is the best new idea in the pile
 
 Agreed — taking it out of the parking lot. "100% analysis" here means verifying the thing both guys *asserted* but nobody checked: does the Indian data actually exist, at what depth, and where. That's six independent verification tracks — wage/food/land/gold-price/policy-timeline/novelty — so I'm dispatching a full research wave now, and when it lands you get the synthesis plus my decisive opinions on guy 1 and guy 2.
 
-*[agent created a 5-item checklist and dispatched 6 parallel research subagents: gold price series, wage anchors, MSP/mandi/livestock, land/housing, policy timeline, novelty check — each writing to research/rupee-gold-stack-20261120/]*
+*[agent created a 5-item checklist and dispatched 6 parallel research subagents: gold price series, wage anchors, MSP/mandi/livestock, land/housing, policy timeline, novelty check — each writing to research/svarnam-20261120/]*
 
 **Agent** *(status note)*:
 
-Six verification tracks are now running in parallel — gold price series, wage anchors, MSP/mandi/livestock, land/housing, the duty-and-policy timeline, and a novelty/prior-art check. Each writes its evidence file into `research/rupee-gold-stack-20261120/`. When they settle, I'll read everything, give you the complete feasibility analysis and the V1 build design, then my unvarnished verdict on both guys' analyses.
+Six verification tracks are now running in parallel — gold price series, wage anchors, MSP/mandi/livestock, land/housing, the duty-and-policy timeline, and a novelty/prior-art check. Each writes its evidence file into `research/svarnam-20261120/`. When they settle, I'll read everything, give you the complete feasibility analysis and the V1 build design, then my unvarnished verdict on both guys' analyses.
 
 *[children settled one by one; agent's progress notes as each landed:]*
 
@@ -568,7 +570,7 @@ All six tracks are in, the evidence base is complete. Closing out the tracking, 
 
 # The 100% analysis
 
-Six verification tracks ran; every claim both guys made is now checked against actual sources. Full evidence lives in [dive_01](<research/rupee-gold-stack-20261120/dive_01.md>) through [dive_06](<research/rupee-gold-stack-20261120/dive_06.md>).
+Six verification tracks ran; every claim both guys made is now checked against actual sources. Full evidence lives in [dive_01](<research/svarnam-20261120/dive_01.md>) through [dive_06](<research/svarnam-20261120/dive_06.md>).
 
 ## 1. What the data actually supports
 
@@ -632,10 +634,10 @@ Good news first: yesterday's wave already left real downloads on disk. Here's th
 | RBI FX tables (USD/INR annual + monthly/daily) | ✅ on disk | `_scratch/rbi/t132/t133/t205/t223.xlsx` |
 | LBMA PM USD, 1968-04→ | ✅ on disk, **stale tail** | `_scratch/rbi/gold_pm_wb.json` ends 2023-09 — needs one live fetch for 2023→2026 |
 | WGC Goldhub INR monthly from 1978 | ⬜ one manual download | browser fetch of the Goldhub xlsx (scripts get 403'd) — also confirms the INR column's true depth |
-| Wage series (WRRI monthly, 20 states) | ⬜ portal download | Labour Bureau DB — source pinned in [dive_02](<research/rupee-gold-stack-20261120/dive_02.md>) |
+| Wage series (WRRI monthly, 20 states) | ⬜ portal download | Labour Bureau DB — source pinned in [dive_02](<research/svarnam-20261120/dive_02.md>) |
 | AWI district series since 1950-51 | ⬜ optional, recommended | gives the long-history chart its depth (2-3 yr publication lag) |
 | MSP archive 1982-83→ | ⬜ digitization job | CACP PDF annexures — stitch ~20 annual tables for wheat/rice/tur; clean table from 2010-11 |
-| Duty timeline + premium episodes | ✅ verified, just transcribe | full year-by-year table sits in [dive_05](<research/rupee-gold-stack-20261120/dive_05.md>) |
+| Duty timeline + premium episodes | ✅ verified, just transcribe | full year-by-year table sits in [dive_05](<research/svarnam-20261120/dive_05.md>) |
 
 ## 2. Tools — all free, nothing to buy
 
@@ -672,11 +674,11 @@ No forward price targets, no advice framing; a visible source table on the page;
 
 Writing the master knowledge-transfer document now — self-contained, in the same style as your Tessera KT bundle: a fresh session or collaborator should be able to resume this project from zero context.
 
-*[agent wrote Rupee-Gold-Stack-Knowledge-Transfer.md (26,050 bytes) and delivered it as a file card; saved a memory entry pointing to it]*
+*[agent wrote Svarnam-Knowledge-Transfer.md (26,050 bytes) and delivered it as a file card; saved a memory entry pointing to it]*
 
 **Agent** *(main reply)*:
 
-Done — [Rupee-Gold-Stack-Knowledge-Transfer.md](Rupee-Gold-Stack-Knowledge-Transfer.md) is delivered (26 KB, self-contained).
+Done — [Svarnam-Knowledge-Transfer.md](Svarnam-Knowledge-Transfer.md) is delivered (26 KB, self-contained).
 
 It follows the same pattern as your Tessera bundle: a fresh session, machine, or collaborator can resume from zero context. Inside:
 
@@ -687,7 +689,7 @@ It follows the same pattern as your Tessera bundle: a fresh session, machine, or
 - **§5–7:** the weekend-by-weekend build plan, `dataset.json` sketch, non-negotiable guardrails, sequencing rule, and the ordered next-actions checklist
 - **§8–9:** artifact map and the one-paragraph context a future session needs about you and your other workstreams
 
-**Portability rule:** copy these three things together and the project state travels complete — this file + `research/rupee-gold-stack-20261120/` (the six dive files) + `_scratch/rbi/` (the downloaded data).
+**Portability rule:** copy these three things together and the project state travels complete — this file + `research/svarnam-20261120/` (the six dive files) + `_scratch/rbi/` (the downloaded data).
 
 First action when you're ready, whenever that is: the two browser fetches (Goldhub xlsx + live LBMA tail) — I can close those in about ten minutes any time you say go.
 
@@ -701,14 +703,14 @@ First action when you're ready, whenever that is: the two browser fetches (Goldh
 
 **Agent:**
 
-This document is that reply. Every user message and agent reply from Turns 1–6 above is reproduced verbatim, including the two pasted external analyses in full and all progress notes. Tool calls, searches, memory writes, and subagent dispatches are represented as bracketed annotations; the six research evidence files (dive_01–dive_06) and the two deliverables (Rupee-Gold-Stack-Knowledge-Transfer.md, and this transcript) live in the workspace as separate artifacts.
+This document is that reply. Every user message and agent reply from Turns 1–6 above is reproduced verbatim, including the two pasted external analyses in full and all progress notes. Tool calls, searches, memory writes, and subagent dispatches are represented as bracketed annotations; the six research evidence files (dive_01–dive_06) and the two deliverables (Svarnam-Knowledge-Transfer.md, and this transcript) live in the workspace as separate artifacts.
 
 — *End of transcript.*
 
 **Artifacts referenced in this session:**
-- `Rupee-Gold-Stack-Knowledge-Transfer.md` — the KT document (Turn 6)
-- `Rupee-Gold-Stack-Conversation-Transcript.md` — this transcript (Turn 7)
-- `research/rupee-gold-stack-20261120/dive_01.md` … `dive_06.md` — the six verification tracks' full evidence
+- `Svarnam-Knowledge-Transfer.md` — the KT document (Turn 6)
+- `Svarnam-Conversation-Transcript.md` — this transcript (Turn 7)
+- `research/svarnam-20261120/dive_01.md` … `dive_06.md` — the six verification tracks' full evidence
 - `.zwork/attachments/7235f991-ed14-4d70-ab74-e79870ece64f/pasted_text_20261120T172551006Z_2e59870a.txt` — guy 1 analysis (original attachment)
 - `.zwork/attachments/eef2721e-dd43-4085-9a7c-96dd42c1af11/pasted_text_20261120T172653222Z_b8a44666.txt` — guy 2 analysis (original attachment)
 - `_scratch/rbi/` — 10 downloaded data files (RBI Handbook tables, LBMA JSON, Goldhub page)

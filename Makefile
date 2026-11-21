@@ -1,4 +1,4 @@
-# Rupee Gold Stack — build commands (CODE-STRUCTURE.md §1)
+# Svarnam — build commands (CODE-STRUCTURE.md §1)
 PY := python
 
 .PHONY: build update refresh serve test

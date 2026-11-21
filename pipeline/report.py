@@ -4,7 +4,7 @@ from datetime import date
 
 def render(meta, stats, decomp_annual, decomp_monthly, ratios, problems, notes):
     L = []
-    L.append("RUPEE GOLD STACK — BUILD REPORT")
+    L.append("SVARNAM — BUILD REPORT")
     L.append("generated: %s   data_as_of: %s   generator: %s" % (
         meta["generated"], meta["data_as_of"], meta["generator_version"]))
     L.append("validation: %s" % ("PASS — zero problems" if not problems else "FAIL (%d problems)" % len(problems)))

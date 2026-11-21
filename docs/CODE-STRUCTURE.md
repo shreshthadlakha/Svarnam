@@ -1,14 +1,14 @@
-# Rupee Gold Stack — Repository & Code Structure
+# Svarnam — Repository & Code Structure
 
 **Version:** 1.0 · **Date:** 21 Nov 2026
-**Repo name (working title):** `rupee-gold-stack` · Stack: Python 3.13 pipeline, vanilla JS page
+**Repo name (working title):** `svarnam` · Stack: Python 3.13 pipeline, vanilla JS page
 
 ---
 
 ## 1. Repository tree
 
 ```
-rupee-gold-stack/
+svarnam/
 ├── README.md                    # public face: what this is, honesty labels, "data as of", links
 ├── LICENSE                      # MIT (code)
 ├── DATA-LICENSE.md              # CC BY 4.0 for dataset.json + charts; third-party source terms summarized
@@ -125,7 +125,7 @@ Full URLs and access dates live in `pipeline/sources.py` (single registry) and r
 
 | Item | Workspace (now) | Repo (at M0) |
 |---|---|---|
-| KT bundle | `docs/Rupee-Gold-Stack-Knowledge-Transfer.md` | summarized into README + docs/ |
+| KT bundle | `docs/Svarnam-Knowledge-Transfer.md` | summarized into README + docs/ |
 | Doc suite | `docs/PRD.md`, `TECH-DESIGN.md`, `CODE-STRUCTURE.md`, `PLAN.md`, `LAUNCH-KIT.md` | copied into `docs/` |
 | Dive evidence | `research/dive_01–06.md` | distilled into sources.py + docs (raw dives stay in workspace) |
 | Downloaded data | `data/rbi/*` (+ `data/wages/`, `data/msp/`, `data/policy/`) | moved to `data/raw/{rbi,lbma,goldhub,fred,wages,msp}/` at M0 |

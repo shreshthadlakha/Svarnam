@@ -1,5 +1,5 @@
-RUPEE GOLD STACK — BUILD REPORT
-generated: 2026-11-21T18:34:13Z   data_as_of: 2026-11-21   generator: 1.0
+SVARNAM — BUILD REPORT
+generated: 2026-11-21T19:11:02Z   data_as_of: 2026-11-21   generator: 1.0
 validation: PASS — zero problems
 
 == interim row counts ==

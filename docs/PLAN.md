@@ -1,14 +1,14 @@
-# Rupee Gold Stack — Execution Plan
+# Svarnam — Execution Plan
 
 **Version:** 1.0 · **Date:** 21 Nov 2026 · **Owner:** solo dev
-**Sequencing override (owner decision, 21 Nov 2026):** the Tessera ship-gate rule is lifted for this project — the owner will launch Rupee Gold Stack first. M4–M5 proceed immediately; the two projects stay fully codebase-separated (S:\Tessera untouched). Quarterly refresh is automated (see M6 + `pipeline/refresh.py` + `.github/workflows/refresh.yml`) — no manual rebuild needed.
+**Sequencing override (owner decision, 21 Nov 2026):** the Tessera ship-gate rule is lifted for this project — the owner will launch Svarnam first. M4–M5 proceed immediately; the two projects stay fully codebase-separated (S:\Tessera untouched). Quarterly refresh is automated (see M6 + `pipeline/refresh.py` + `.github/workflows/refresh.yml`) — no manual rebuild needed.
 
 ---
 
 ## 1. Milestones
 
 ### M0 — Repo bootstrap (0.5 day, anytime)
-- Create `rupee-gold-stack` repo; MIT + CC BY 4.0 + DISCLAIMER files; directory tree per CODE-STRUCTURE §1; CI stub; Pages workflow stub.
+- Create `svarnam` repo; MIT + CC BY 4.0 + DISCLAIMER files; directory tree per CODE-STRUCTURE §1; CI stub; Pages workflow stub.
 - Move `data/rbi/*` → `data/raw/rbi/` with checksums (workspace layout corrected 21 Nov 2026 — downloads live in `data/rbi/`).
 - **Exit:** tree exists, `make test` runs (empty), Pages serves a placeholder.
 
@@ -34,7 +34,7 @@
 - `index.html` + charts + annotation shim + source table + CSV export + honesty labels + SGB card; mobile pass.
 - **Exit:** PRD acceptance criteria A1–A8 all pass (grep gate in CI). — A1–A7 verified (A7 gate in CI, tag-stripped copy); A8 (360 px device check) pending a real phone pass; per-element hover source-ids = polish item (page-level source table covers A1).
 
-### M5 — Launch (0.5 day, after M4) — READY, owner executes: create GitHub repo `rupee-gold-stack`, push master, **connect Vercel (output dir `site` per vercel.json)**, run the [LAUNCH-KIT §4 smoke test](<LAUNCH-KIT.md>) on the live URL, post per LAUNCH-KIT §2. Every monthly refresh commit redeploys Vercel automatically.
+### M5 — Launch (0.5 day, after M4) — READY, owner executes: create GitHub repo `svarnam`, push master, **connect Vercel (output dir `site` per vercel.json)**, run the [LAUNCH-KIT §4 smoke test](<LAUNCH-KIT.md>) on the live URL, post per LAUNCH-KIT §2. Every monthly refresh commit redeploys Vercel automatically.
 - README final; LAUNCH-KIT §2 LinkedIn post (pick hook, add screenshots); publish; pin repo link.
 - **Exit:** post live; repo public; "data as of" stamp correct.
 
