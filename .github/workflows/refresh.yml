@@ -1,0 +1,44 @@
+# Quarterly automated data refresh (docs/LAUNCH-KIT.md §5 runbook, automated portion).
+# Fetches every automatable source, re-parses, rebuilds site/dataset.json and commits
+# the result. Goldhub stays manual (login-gated); a new RBI Handbook edition must be
+# wired by the owner (pipeline/sources.py + RBI_EDITION_URLS in pipeline/refresh.py).
+name: quarterly-refresh
+
+on:
+  schedule:
+    # 06:00 UTC on the first day of Jan / Apr / Jul / Oct (quarterly)
+    - cron: '0 6 1 1,4,7,10 *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install pipeline deps
+        run: pip install openpyxl lxml pytest
+
+      - name: Refresh sources, re-parse, rebuild
+        run: python pipeline/refresh.py --ci
+
+      - name: Commit refreshed artifacts (skip if no diff)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/dataset.json site/sources.md build_report.txt refresh_report.txt
+          if git diff --cached --quiet; then
+            echo "No changes to committed artifacts — nothing to commit."
+          else
+            git commit -m "auto-refresh: quarterly data update"
+            git push
+          fi
