@@ -4,12 +4,23 @@ import pytest
 from pipeline import validate
 
 
-def test_validate_interims_real_files():
-    """Runs against the real interim files when present (repo build)."""
-    try:
-        problems, stats, notes = validate.validate_interims()
-    except validate.ValidationError as e:
-        pytest.skip("interims not built yet: %s" % e)
+def test_validate_interims_pinned_baseline():
+    """Fresh-checkout semantics — exactly what CI sees: the pinned baseline interims
+    are committed, and the raw LBMA feed is deliberately NOT pinned to git (ICE
+    licensing — we redistribute derived outputs, not the feed). The baseline must
+    therefore validate with ci_mode=True, where a missing lbma_daily.csv is a
+    documented note, never a failure."""
+    problems, stats, notes = validate.validate_interims(ci_mode=True)
+    assert not problems, problems
+
+
+def test_validate_interims_strict_local():
+    """Full strict validation where the raw LBMA feed exists (owner machine)."""
+    from pathlib import Path
+
+    if not (Path(validate.INTERIM) / "lbma_daily.csv").is_file():
+        pytest.skip("lbma_daily.csv absent (CI baseline) — strict validation runs where the feed exists")
+    problems, stats, notes = validate.validate_interims()
     assert not problems, problems
 
 
