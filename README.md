@@ -9,14 +9,12 @@ FY1985-86 → today.
 - Built from public data only: RBI Handbook, LBMA (via Wayback), WGC Goldhub, Labour Bureau, CACP, FRED
 - Status: **v1 build complete** — pipeline + page + monthly auto-refresh (Vercel redeploys on every refresh commit); awaiting repo push · regime breaks annotated · provisional labels everywhere
 
-## Layout
+## Layout (this repo = the `build/` folder of the Svarnam workspace)
 
 | Folder | What lives here |
 |---|---|
-| `docs/` | All documents: PRD, TECH-DESIGN, CODE-STRUCTURE, PLAN, LAUNCH-KIT, the master KT bundle, decision-trail transcript |
 | `pipeline/` | The local build system (Python; never deployed): parsers → derive → validate → build |
-| `site/` | The only deployed directory (GitHub Pages): renders exclusively from `dataset.json` |
-| `data/` | Raw downloads (gitignored, checksummed), hand-curated policy CSVs (in git), build report |
-| `research/` | The six verification-track evidence files (workspace-only) |
+| `site/` | The only deployed directory (Vercel): renders exclusively from `dataset.json` |
+| `data/` | Raw downloads (gitignored, checksummed), hand-curated policy CSVs (in git), pinned baseline interims (in git) |
 
-Build: `make build` · Test: `make test` · Serve locally: `make serve`
+Planning documents (PRD, TECH-DESIGN, PLAN, LAUNCH-KIT) live in the owner's workspace `docs/` folder, outside this repository. Build: `make build` · Test: `make test` · Serve locally: `make serve`

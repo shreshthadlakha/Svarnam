@@ -19,11 +19,6 @@ data/**
 !data/interim/msp_annual.csv
 !data/interim/fx_daily.csv
 
-# --- workspace-only evidence and tooling ---
-research/
-_scratch/
-.zwork/
-
 # --- python ---
 __pycache__/
 *.pyc

@@ -99,7 +99,7 @@ GST leg      = 3% on the duty-paid value, from 1 Jul 2017 (day-weighted at the b
 landed cost  = metal+FX + duty + GST
 premium leg  = Mumbai price − landed cost   (signed — a discount renders below the baseline)</pre>
     <p>The premium residual is displayed, never judged. Reconciliation is enforced by the build: the four legs must sum back to the published price within ±0.5% every period, and golden values are checked against the source files on every build.</p>
-    <p><strong>Annual vs monthly bases:</strong> annual rows use RBI's official-rate series (Table 133, regime flags included); monthly rows (2005-10 →) use the Goldhub domestic price and the Fed H.10 market rate — both flagged on the rows. Excluded by design: livestock and land history (no national series exists), forward prices (we show none), state-wise layer (V2). Deep methodology: <a href="https://github.com/{user}/svarnam/blob/main/docs/TECH-DESIGN.md">TECH-DESIGN.md</a>.</p>
+    <p><strong>Annual vs monthly bases:</strong> annual rows use RBI's official-rate series (Table 133, regime flags included); monthly rows (2005-10 →) use the Goldhub domestic price and the Fed H.10 market rate — both flagged on the rows. Excluded by design: livestock and land history (no national series exists), forward prices (we show none), state-wise layer (V2). Every figure above reconciles to its source in the <a href="#sourcesSec">source table</a>.</p>
   </section>
 
   <section id="sourcesSec">
