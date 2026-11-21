@@ -16,19 +16,22 @@ Everything here is ready-to-paste. Nothing in this file may drift from PRD guard
 **LinkedIn post closing line (verbatim):**
 > Sources for every number are on the page; the CSV is downloadable. No forecasts here — just the arithmetic the headlines skip.
 
-## 2. LinkedIn launch post (skeleton + hook options)
+## 2. LinkedIn launch post (numbers computed from dataset.json v0.1 — do not estimate)
 
 Structure (price-chart hero → twist → tool → punchline → link):
-1. **Hook:** one of —
-   - **H1 (chart):** "₹18 in 1925. ₹1.5 lakh today. You've seen this chart. Here's the one nobody's made." → [same chart, but each year split into metal / dollar / tax / premium]
-   - **H2 (news peg):** "In July 2024 India cut gold import duty to 6%. In May 2026 it hiked it back to 15%. Here's what that did to the price you pay — decomposed."
-   - **H3 (question):** "₹1.18 lakh per 10 grams. How much of that is gold, how much is the dollar, how much is Delhi, and how much is fear? I built a tool that answers it — 40 years of data."
-2. **Three findings** (from the decomposition — fill from dataset after M2; candidates: metal+FX share ~94% in FY2025-26; the duty leg's 2022→2024→2026 round trip; India often trading *below* landed cost = the discount/grey-market story).
-3. **SGB punchline:** "The government launched Sovereign Gold Bonds at ₹2,684/g in 2015, sold 67 tranches, then discontinued the scheme in 2025 — because gold rising ₹1.12 lakh-crore made its own borrowing too expensive. The premium is so real the sovereign stopped selling its instrument."
-4. **Wage line:** one ratio stat (e.g., "X grams of gold = one day's wage in 1990 vs Y today" — compute from dataset, do not estimate).
+
+1. **Hook:** "₹18 in 1925. ₹1.5 lakh today. You've seen this chart a hundred times. Here's the one nobody's made — the same price, split into what it's actually made of."
+2. **Three findings (all from the build):**
+   - 94.4% of what India pays for gold in FY2025-26 is just world metal price × the dollar. Customs duty is 5.7%, GST 3.0% — and the local market traded **3.1% BELOW landed cost** (the grey-market discount after the May 2026 re-hike).
+   - The tax leg did a round trip inside two years: 15% → 6% (Jul 2024) → 15% (May 2026). The chart shows it as steps, sourced to notifications.
+   - **A rural mason's daily wage bought 0.143 g of gold in FY2006-07. In FY2023-24 it bought 0.100 g — 70% of what it used to.** Gold did not outrun the dollar; it outran the wage.
+3. **Premium flip (the residual leg):** +11.4% above landed cost in Dec 2013 (80:20 restriction era) → −3.8% below landed cost in Sep 2026 (post-re-hike grey market). Restrictions make premiums; liberalisations make discounts. The chart marks every regime break.
+4. **SGB punchline:** "The government launched Sovereign Gold Bonds at ₹2,684/g in 2015, sold 67 tranches, then discontinued the scheme in 2025 — because gold rising made ₹1.12 lakh-crore of its own gold-linked borrowing too expensive. The premium is so real the sovereign stopped selling its instrument."
 5. **Closing:** the LAUNCH-KIT §1 LinkedIn line + link. No hashtags beyond 2–3 (finance/India).
 
 Format: first image = the decomposed price chart (mobile-legible); second = wage chart; third = source-table screenshot (the trust shot). Carousel or single image + link in comment (LinkedIn algorithm choice at post time).
+
+Owner actions at launch: create the GitHub repo `rupee-gold-stack`, push `master`, enable Pages (workflow already committed), take the three screenshots from the live page, replace {user} in README/index links, delete the throwaway Goldhub account.
 
 ## 3. README skeleton (repo public face)
 

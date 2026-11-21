@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rupee Gold Stack — what India's rupee gold price is made of</title>
+<meta name="description" content="What is ₹1.18 lakh / 10g of gold made of? Metal, dollar, tax, local premium — decomposed from public data, FY1985-86 → today. Model, not advice.">
+<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header class="hero">
+  <p class="brand">Rupee Gold Stack</p>
+  <h1>What is India's rupee gold price <em>made of</em>?</h1>
+  <p class="tagline">Metal, dollar, tax, and the local premium — decomposed from public data alone, FY1985-86 → today. No opinions, just arithmetic.</p>
+  <div class="hero-row">
+    <div class="hero-chart"><canvas id="heroChart" aria-label="Stacked bar: today's rupee gold price split into metal, duty, GST and premium"></canvas></div>
+    <div class="hero-stats" id="heroStats" aria-live="polite"></div>
+  </div>
+  <p class="stamp">Data as of <span id="dataAsOf">…</span> ·
+    <span class="chip chip-prov">provisional</span>
+    <span class="chip">FY averages</span>
+    <span class="chip chip-warn">source break 1999-2000 / 2000-01</span>
+    <span class="chip chip-warn">pre-1990 not modeled (Gold Control Act era)</span>
+  </p>
+</header>
+
+<main>
+  <section id="stack">
+    <h2>The rupee stack, year by year</h2>
+    <p class="section-note">Every column is the Mumbai ₹/10g average split into four legs: world metal price × USD/INR, customs duty, GST, and the signed residual (a premium above landed cost, or a discount below it).</p>
+    <div class="controls">
+      <label>View:
+        <select id="stackMode">
+          <option value="annual" selected>Annual (FY averages)</option>
+          <option value="monthly">Monthly (2005-10 →, Goldhub domestic)</option>
+        </select>
+      </label>
+    </div>
+    <div class="chartbox"><canvas id="stackChart" aria-label="Stacked columns of the rupee gold price decomposed by period"></canvas></div>
+    <details class="datatable"><summary>View data as table</summary><div id="stackTable"></div></details>
+    <h3>Regime breaks marked on the chart</h3>
+    <ul id="breakList" class="chiplist"></ul>
+  </section>
+
+  <section id="wages">
+    <h2>What a day's wage buys</h2>
+    <p class="section-note">Grams of gold one day's rural wage buys — the purchasing-power anchor with the deepest official history. Wage data end FY2023-24 (upstream lag); the decomposition chart carries the current period.</p>
+    <div class="controls">
+      <label>Occupation: <select id="occupationSel"></select></label>
+      <span class="chip">WRRI · 20 states + All-India · monthly → FY averages</span>
+      <span class="chip chip-warn">occupation labels reclassified Nov 2013 — no official linking factor</span>
+    </div>
+    <div class="chartbox"><canvas id="wageChart" aria-label="Line chart: grams of gold per wage-day over time"></canvas></div>
+    <details class="datatable"><summary>View data as table</summary><div id="wageTable"></div></details>
+  </section>
+
+  <section id="msp">
+    <h2>What a kilo of food buys</h2>
+    <p class="section-note">Grams of gold one kilogram at Minimum Support Price buys — the official national food-price anchor.</p>
+    <div class="controls">
+      <label>Crop: <select id="cropSel"></select></label>
+      <span class="chip">CACP · crop years as published</span>
+      <span class="chip chip-warn">rabi marketing year = crop year + 1 (wheat)</span>
+    </div>
+    <div class="chartbox"><canvas id="mspChart" aria-label="Line chart: grams of gold per MSP kilogram over time"></canvas></div>
+    <details class="datatable"><summary>View data as table</summary><div id="mspTable"></div></details>
+  </section>
+
+  <section id="episodes">
+    <h2>Documented premium &amp; discount episodes</h2>
+    <p class="section-note">Dealer-quoted episodes from Reuters' "Asia Gold" reporting — restrictions and duty spikes push the local market to a premium; liberalisations and price spikes push it to a discount. These anchor the residual leg you see in the charts.</p>
+    <ul id="episodeList" class="episodelist"></ul>
+  </section>
+
+  <section id="sgb" class="card">
+    <h2>The sovereign stopped selling its own instrument</h2>
+    <p>India launched Sovereign Gold Bonds on <strong>5 Nov 2015</strong> at <strong>₹2,684/g</strong> (2.75% interest) to shift household demand away from physical gold. Sixty-seven tranches and roughly 147 tonnes later, the last tranche issued on <strong>21 Feb 2024</strong> at ₹6,263/g. In <strong>Feb 2025</strong> the government confirmed the scheme's discontinuation — with a liability near <strong>₹1.12 lakh crore</strong> on ~132 t outstanding, gold's rise had made its own gold-linked borrowing too expensive.</p>
+    <p class="quote">"A rather fairly high-cost borrowing for the government… the government has chosen not to follow that path." — Economic Affairs Secretary, Feb 2025</p>
+    <p class="muted">Source S15 (PIB/RBI notifications as reported by Moneycontrol). The premium is so real the sovereign stopped selling its instrument.</p>
+  </section>
+
+  <section id="calculator">
+    <h2>Your own wage, in grams</h2>
+    <p class="section-note">Runs entirely in your browser — nothing is sent anywhere. Uses the latest monthly domestic price for the gold side.</p>
+    <div class="calc">
+      <label>Your daily wage (₹): <input id="calcWage" type="number" min="0" step="10" placeholder="e.g. 600"></label>
+      <label>Gold per gram (₹): <input id="calcPrice" type="number" step="1"></label>
+      <output id="calcOut">—</output>
+    </div>
+    <p class="muted" id="calcNote"></p>
+  </section>
+
+  <section id="methodology">
+    <h2>Methodology — an identity, not a model</h2>
+    <p>This page decomposes a <em>published</em> price; it computes no fair value and makes no valuation claim. For every period:</p>
+    <pre>metal+FX leg = London $/oz ÷ 31.1034768 × 10 × USD/INR
+duty leg     = day-weighted customs duty from the sourced calendar (specific ₹/10g era 1990-2011; BCD+AIDC+SWS ad-valorem era 2012→)
+GST leg      = 3% on the duty-paid value, from 1 Jul 2017 (day-weighted at the boundary)
+landed cost  = metal+FX + duty + GST
+premium leg  = Mumbai price − landed cost   (signed — a discount renders below the baseline)</pre>
+    <p>The premium residual is displayed, never judged. Reconciliation is enforced by the build: the four legs must sum back to the published price within ±0.5% every period, and golden values are checked against the source files on every build.</p>
+    <p><strong>Annual vs monthly bases:</strong> annual rows use RBI's official-rate series (Table 133, regime flags included); monthly rows (2005-10 →) use the Goldhub domestic price and the Fed H.10 market rate — both flagged on the rows. Excluded by design: livestock and land history (no national series exists), forward prices (we show none), state-wise layer (V2). Deep methodology: <a href="https://github.com/{user}/rupee-gold-stack/blob/main/docs/TECH-DESIGN.md">TECH-DESIGN.md</a>.</p>
+  </section>
+
+  <section id="sourcesSec">
+    <h2>Sources — every number links home</h2>
+    <div id="sourcesTable"></div>
+  </section>
+</main>
+
+<footer id="disclaimer">
+  <p><strong>Model, not advice.</strong> This page decomposes published gold prices and compares them with public wage and support-price statistics. It contains no forecasts, no price targets, and no recommendation to buy, sell, or avoid anything. Every number links to its public source; if a source revises, we revise. Data as of <span id="dataAsOf2">…</span>.</p>
+  <p>
+    <button id="csvBtn" type="button">Download the dataset (CSV)</button>
+    <a id="jsonLink" href="dataset.json">dataset.json</a> ·
+    <a href="sources.md">sources.md</a>
+  </p>
+  <p class="muted">Code: MIT · Dataset &amp; charts: CC BY 4.0 · Built from public data only: RBI Handbook, LBMA (via Wayback), WGC Goldhub, Labour Bureau, CACP, FRED. Regime breaks annotated; provisional labels everywhere.</p>
+  <p id="fatalMsg" class="fatal hidden"></p>
+</footer>
+
+<script src="assets/vendor/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

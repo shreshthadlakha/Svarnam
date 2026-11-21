@@ -3,11 +3,11 @@
 What is ₹1.18 lakh / 10g of gold made of? Metal, dollar, tax, fear — decomposed,
 FY1985-86 → today.
 
-- Live tool: https://{user}.github.io/rupee-gold-stack/ (pending first deploy)
+- Live tool: https://{user}.github.io/rupee-gold-stack/ (push to publish — Pages workflow already in `.github/workflows/`)
 - [Data sources](site/sources.md) · [Download CSV](site/dataset.json) · [Methodology](docs/TECH-DESIGN.md)
 - **Model, not advice** (see [DISCLAIMER.md](DISCLAIMER.md)) · no forecasts, no targets — by design
-- Built from public data only: RBI Handbook, LBMA, WGC Goldhub, Labour Bureau, CACP, FRED
-- Status: data acquisition complete (2026-11-21); pipeline build in progress · regime breaks annotated · provisional labels everywhere
+- Built from public data only: RBI Handbook, LBMA (via Wayback), WGC Goldhub, Labour Bureau, CACP, FRED
+- Status: **v1 build complete (2026-11-21)** — pipeline + page + quarterly auto-refresh; awaiting repo push · regime breaks annotated · provisional labels everywhere
 
 ## Layout
 

@@ -45,6 +45,9 @@ def build(write=True):
     usd_monthly = _read("gold_usd_monthly.csv", numeric=("usd_oz",))
     domestic_monthly = _read("gold_inr_domestic_monthly.csv", numeric=("inr_10g_domestic",))
     wage_annual = _read("wage_annual.csv", numeric=("inr_day", "inr_day_female", "n_months"))
+    for w in wage_annual:
+        if w["n_months"] is not None:
+            w["n_months"] = int(w["n_months"])
     msp_annual = _read("msp_annual.csv", numeric=("inr_quintal",))
 
     decomp_annual = derive.decomposition_annual(gold_annual, fx_annual, cal)
@@ -74,11 +77,12 @@ def build(write=True):
         },
         "sources": [{"id": k, **v} for k, v in sorted(sources_mod.SOURCES.items())],
         "series": {
+            # slimmed for the A5 page-weight budget: the raw monthly USD/domestic
+            # series and the all-India wage matrix are NOT emitted — their values
+            # already live inside decomposition_monthly / gold_per_wageday rows.
+            # Full series stay in data/interim/ (and ride the quarterly refresh).
             "gold_inr_annual": gold_annual,
             "fx_annual": fx_annual,
-            "gold_usd_monthly": usd_monthly,
-            "gold_inr_domestic_monthly": domestic_monthly,
-            "wage_annual_all_india": wage_all_india,
             "msp_annual": msp_annual,
         },
         "policy": {

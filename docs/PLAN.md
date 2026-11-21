@@ -1,7 +1,7 @@
 # Rupee Gold Stack — Execution Plan
 
 **Version:** 1.0 · **Date:** 21 Nov 2026 · **Owner:** solo dev
-**Standing rule:** Tessera's ship gate (friend-Mac session + real .pub/.msg) is untouched — M0–M3 may run anytime in background; M4–M5 (page + launch) slot after Tessera ships or as one deliberate weekend.
+**Sequencing override (owner decision, 21 Nov 2026):** the Tessera ship-gate rule is lifted for this project — the owner will launch Rupee Gold Stack first. M4–M5 proceed immediately; the two projects stay fully codebase-separated (S:\Tessera untouched). Quarterly refresh is automated (see M6 + `pipeline/refresh.py` + `.github/workflows/refresh.yml`) — no manual rebuild needed.
 
 ---
 
@@ -30,11 +30,11 @@
 - `parse_wages`, `parse_msp`; ratio series; flags (`stitched`, `lagged`, `break-2013` where applicable).
 - **Exit:** gold-per-wage-day (WRRI era) + gold-per-MSP-kg computed and validated; AWI extension either in or explicitly deferred to V2.
 
-### M4 — The page (1 day, after Tessera gate / deliberate weekend)
+### M4 — The page (1 day, after Tessera gate / deliberate weekend) — ✅ BUILT 21 Nov 2026 (sequencing overridden by owner)
 - `index.html` + charts + annotation shim + source table + CSV export + honesty labels + SGB card; mobile pass.
-- **Exit:** PRD acceptance criteria A1–A8 all pass (grep gate in CI).
+- **Exit:** PRD acceptance criteria A1–A8 all pass (grep gate in CI). — A1–A7 verified (A7 gate in CI, tag-stripped copy); A8 (360 px device check) pending a real phone pass; per-element hover source-ids = polish item (page-level source table covers A1).
 
-### M5 — Launch (0.5 day, after M4)
+### M5 — Launch (0.5 day, after M4) — READY, owner executes (create GitHub repo `rupee-gold-stack`, push master, enable Pages, post per LAUNCH-KIT §2)
 - README final; LAUNCH-KIT §2 LinkedIn post (pick hook, add screenshots); publish; pin repo link.
 - **Exit:** post live; repo public; "data as of" stamp correct.
 

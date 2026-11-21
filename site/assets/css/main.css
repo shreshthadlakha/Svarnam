@@ -1,0 +1,73 @@
+/* Rupee Gold Stack — main.css (system fonts only, mobile-first, A5 budget) */
+:root {
+  --gold: #c9a227;
+  --metal: #b8860b;
+  --duty: #b0413e;
+  --gst: #5e8c61;
+  --premium: #3f5f8a;
+  --ink: #22211d;
+  --paper: #faf7ef;
+  --card: #ffffff;
+  --line: #e4dcc8;
+  --warn-bg: #fdf3d7;
+  --warn-ink: #6b5b2e;
+  --muted: #6f6a5a;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+main, .hero, footer { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+.hero { padding-top: 28px; padding-bottom: 8px; }
+.brand { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; color: var(--muted); margin: 0; }
+h1 { font-size: clamp(26px, 5.4vw, 40px); line-height: 1.15; margin: 6px 0 10px; }
+h1 em { font-style: normal; color: var(--metal); border-bottom: 3px solid var(--gold); }
+.tagline { font-size: clamp(15px, 2.6vw, 18px); color: var(--muted); margin: 0 0 18px; }
+h2 { font-size: clamp(20px, 3.6vw, 26px); margin: 34px 0 6px; }
+h3 { font-size: 15px; margin: 18px 0 6px; }
+section { margin-bottom: 34px; }
+.section-note, .muted { color: var(--muted); font-size: 14px; }
+.hero-row { display: flex; gap: 18px; flex-wrap: wrap; align-items: stretch; }
+.hero-chart { flex: 1 1 340px; min-height: 130px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+.hero-stats { flex: 0 1 260px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: center; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.stat .v { font-size: 20px; font-weight: 700; }
+.stat .k { font-size: 12px; color: var(--muted); }
+.stat.neg .v { color: var(--duty); }
+.stamp { font-size: 13px; color: var(--muted); }
+.chip { display: inline-block; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; font-size: 12px; margin: 2px 4px 2px 0; color: var(--muted); }
+.chip-prov { background: var(--warn-bg); color: var(--warn-ink); border-color: #ead9a6; }
+.chip-warn { background: var(--warn-bg); color: var(--warn-ink); border-color: #ead9a6; }
+.chiplist { list-style: none; padding: 0; margin: 6px 0 0; }
+.chartbox { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-top: 10px; }
+canvas { max-width: 100%; }
+.controls { margin-top: 8px; font-size: 14px; }
+select { font: inherit; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); max-width: 100%; }
+.datatable { margin-top: 8px; font-size: 13px; }
+.datatable table { border-collapse: collapse; width: 100%; }
+.datatable th, .datatable td { border: 1px solid var(--line); padding: 3px 8px; text-align: right; }
+.datatable th:first-child, .datatable td:first-child { text-align: left; }
+.episodelist { list-style: none; padding: 0; }
+.episodelist li { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; margin: 8px 0; }
+.episelist-date { font-weight: 700; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+.quote { border-left: 3px solid var(--gold); padding-left: 12px; font-style: italic; }
+.calc { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+.calc label { display: flex; flex-direction: column; font-size: 13px; color: var(--muted); gap: 4px; }
+.calc input { font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; width: 140px; }
+.calc output { font-size: 22px; font-weight: 700; align-self: center; }
+pre { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; overflow-x: auto; font-size: 13px; }
+#sourcesTable table { border-collapse: collapse; width: 100%; font-size: 13px; }
+#sourcesTable th, #sourcesTable td { border: 1px solid var(--line); padding: 6px 8px; vertical-align: top; text-align: left; }
+footer { border-top: 1px solid var(--line); margin-top: 30px; padding-top: 16px; padding-bottom: 40px; font-size: 14px; }
+button { font: inherit; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--gold); color: #fff; cursor: pointer; }
+a { color: #27519c; }
+.hidden { display: none; }
+.fatal { color: var(--duty); font-weight: 700; }
+body.fatal main, body.fatal .hero-row { filter: grayscale(1); opacity: .5; }
+@media (max-width: 480px) {
+  .hero-stats { flex: 1 1 100%; grid-template-columns: 1fr 1fr; }
+  .chartbox { padding: 6px; }
+}
