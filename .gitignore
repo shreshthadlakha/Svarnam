@@ -1,0 +1,24 @@
+# --- bulk data never enters git (too big / licensed) ---
+data/**
+# ...except the hand-curated, sourced policy tables and manifests
+!data/policy/
+!data/policy/**
+!data/msp/
+!data/msp/_urls.csv
+# ...and checksums that pin the raw downloads
+!data/rbi/
+!data/rbi/SHA256SUMS.txt
+
+# --- workspace-only evidence and tooling ---
+research/
+_scratch/
+.zwork/
+
+# --- python ---
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# --- OS ---
+Thumbs.db
+.DS_Store
