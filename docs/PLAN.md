@@ -38,8 +38,8 @@
 - README final; LAUNCH-KIT §2 LinkedIn post (pick hook, add screenshots); publish; pin repo link.
 - **Exit:** post live; repo public; "data as of" stamp correct.
 
-### M6 — Post-launch cadence (ongoing, ~1 h/quarter)
-- Update runbook (LAUNCH-KIT §5): new Handbook edition → re-run; duty change → one calendar row; log corrections publicly if any (S4 metric).
+### M6 — Post-launch cadence — ✅ AUTOMATED 21 Nov 2026
+- `.github/workflows/refresh.yml`: quarterly cron (Jan/Apr/Jul/Oct 1) + manual dispatch → `pipeline/refresh.py --ci` re-fetches FRED / LBMA-via-Wayback / CACP / WRRI / RBI, re-parses, rebuilds, commits. Runner always has pinned baseline interims (`data/interim/` committed), so the build succeeds even on fetch failure — staleness flagged in `refresh_report.txt`. Goldhub monthly overlay refreshes only via the owner's annual login download (annual spine unaffected). New RBI Handbook edition = owner updates `pipeline/sources.py` + `RBI_EDITION_URLS` in refresh.py (refresh warns). Local override: `make refresh`.
 
 ## 2. Dependency graph
 
