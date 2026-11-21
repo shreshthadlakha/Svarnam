@@ -7,7 +7,7 @@
 **Metal · Dollar · Duty · GST · Premium** — India's rupee gold price, decomposed
 from public data alone. FY1985-86 → today.
 
-[![CI](https://github.com/{user}/svarnam/actions/workflows/ci.yml/badge.svg)](https://github.com/{user}/svarnam/actions/workflows/ci.yml)
+[![CI](https://github.com/shreshthadlakha/svarnam/actions/workflows/ci.yml/badge.svg)](https://github.com/shreshthadlakha/svarnam/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/code_license-MIT-blue.svg)](LICENSE)
 [![Data: CC BY 4.0](https://img.shields.io/badge/data_license-CC_BY_4.0-lightgrey.svg)](DATA-LICENSE.md)
 [![Python](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/)
@@ -98,7 +98,7 @@ The build is **validated, not trusted**:
 Prerequisites: **Python 3.13+**, `pip`, and (optionally) GNU Make.
 
 ```bash
-git clone https://github.com/{user}/svarnam.git
+git clone https://github.com/shreshthadlakha/svarnam.git
 cd svarnam
 python -m pip install pandas openpyxl lxml pytest
 
@@ -114,9 +114,7 @@ python -m http.server 8000 --directory site    # → http://localhost:8000
 
 GNU Make users: `make build` · `make test` · `make serve` · `make refresh`.
 
-The repo ships with **pinned baseline interims**, so the build works on a fresh
-clone even before any raw data is downloaded — the validation suite treats a
-missing raw file as a hard failure and tells you which one.
+The repo ships with **pinned baseline interims**, so the build works on a fresh clone even before any raw data is downloaded the validation suite treats a missing raw file as a hard failure and tells you which one.
 
 ## Updating the data
 
