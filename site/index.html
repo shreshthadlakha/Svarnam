@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Svarnam — what India's rupee gold price is made of</title>
+<title>Svarnam — what a tola of gold is made of</title>
 <meta name="description" content="What is ₹1.18 lakh / 10g of gold made of? Metal, dollar, tax, local premium — decomposed from public data, FY1985-86 → today. Model, not advice.">
 <link rel="stylesheet" href="assets/css/main.css">
 </head>
@@ -11,11 +11,11 @@
 <header class="hero">
   <p class="brand">Svarnam</p>
   <h1>What is India's rupee gold price <em>made of</em>?</h1>
-  <p class="tagline">Metal, dollar, tax, and the local premium — decomposed from public data alone, FY1985-86 → today. No opinions, just arithmetic.</p>
   <div class="hero-row">
     <div class="hero-chart"><canvas id="heroChart" aria-label="Stacked bar: today's rupee gold price split into metal, duty, GST and premium"></canvas></div>
     <div class="hero-stats" id="heroStats" aria-live="polite"></div>
   </div>
+  <p class="tagline">Metal, dollar, tax, and the local premium — decomposed from public data alone, FY1985-86 → today. No opinions, just arithmetic.</p>
   <p class="stamp">Data as of <span id="dataAsOf">…</span> ·
     <span class="chip chip-prov">provisional</span>
     <span class="chip">FY averages</span>
@@ -27,7 +27,7 @@
 <main>
   <section id="stack">
     <h2>The rupee stack, year by year</h2>
-    <p class="section-note">Every column is the Mumbai ₹/10g average split into four legs: world metal price × USD/INR, customs duty, GST, and the signed residual (a premium above landed cost, or a discount below it).</p>
+    <p class="section-note">Every column is the Mumbai ₹/10g average split into four legs: world metal price × USD/INR, customs duty, GST, and the signed residual (a premium above landed cost, or a discount below it — below the axis means India paid less than landed cost).</p>
     <div class="controls">
       <label>View:
         <select id="stackMode">
@@ -38,13 +38,16 @@
     </div>
     <div class="chartbox"><canvas id="stackChart" aria-label="Stacked columns of the rupee gold price decomposed by period"></canvas></div>
     <details class="datatable"><summary>View data as table</summary><div id="stackTable"></div></details>
-    <h3>Regime breaks marked on the chart</h3>
+    <h3>Regime breaks marked on the chart — numbered as below</h3>
     <ul id="breakList" class="chiplist"></ul>
   </section>
 
-  <section id="wages">
-    <h2>What a day's wage buys</h2>
-    <p class="section-note">Grams of gold one day's rural wage buys — the purchasing-power anchor with the deepest official history. Wage data end FY2023-24 (upstream lag); the decomposition chart carries the current period.</p>
+  <section id="purchasing">
+    <h2>What gold buys</h2>
+    <p class="section-note">Two purchasing-power anchors, the same question from opposite sides: what one day of work earns in gold, and what one kilogram of staple food costs in gold. Wage data end FY2023-24 (upstream lag); MSP runs on official crop years.</p>
+    <div class="pw-grid">
+      <div class="pw-panel">
+        <h3>A day's wage</h3>
     <div class="controls">
       <label>Occupation: <select id="occupationSel"></select></label>
       <span class="chip">WRRI · 20 states + All-India · monthly → FY averages</span>
@@ -52,11 +55,9 @@
     </div>
     <div class="chartbox"><canvas id="wageChart" aria-label="Line chart: grams of gold per wage-day over time"></canvas></div>
     <details class="datatable"><summary>View data as table</summary><div id="wageTable"></div></details>
-  </section>
-
-  <section id="msp">
-    <h2>What a kilo of food buys</h2>
-    <p class="section-note">Grams of gold one kilogram at Minimum Support Price buys — the official national food-price anchor.</p>
+      </div>
+      <div class="pw-panel">
+        <h3>A kilo of food</h3>
     <div class="controls">
       <label>Crop: <select id="cropSel"></select></label>
       <span class="chip">CACP · crop years as published</span>
@@ -64,6 +65,8 @@
     </div>
     <div class="chartbox"><canvas id="mspChart" aria-label="Line chart: grams of gold per MSP kilogram over time"></canvas></div>
     <details class="datatable"><summary>View data as table</summary><div id="mspTable"></div></details>
+      </div>
+    </div>
   </section>
 
   <section id="episodes">

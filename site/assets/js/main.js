@@ -65,11 +65,11 @@ function renderEpisodes(episodes) {
 function renderBreaks(breaks, decomp) {
   const ul = $('#breakList');
   ul.innerHTML = '';
-  breaks.forEach(b => {
+  breaks.forEach((b, i) => {
     const li = document.createElement('li');
     const chip = document.createElement('span');
     chip.className = 'chip chip-prov';
-    chip.textContent = b.date;
+    chip.textContent = (i + 1) + '. ' + b.date;
     li.appendChild(chip);
     li.appendChild(document.createTextNode(' ' + b.label));
     ul.appendChild(li);

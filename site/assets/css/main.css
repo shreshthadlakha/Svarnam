@@ -1,10 +1,10 @@
 /* Svarnam — main.css (system fonts only, mobile-first, A5 budget) */
 :root {
   --gold: #c9a227;
-  --metal: #b8860b;
-  --duty: #b0413e;
-  --gst: #5e8c61;
-  --premium: #3f5f8a;
+  --metal: #E69F00;
+  --duty: #D55E00;
+  --gst: #009E73;
+  --premium: #0072B2;
   --ink: #22211d;
   --paper: #faf7ef;
   --card: #ffffff;
@@ -41,6 +41,11 @@ section { margin-bottom: 34px; }
 .chip-prov { background: var(--warn-bg); color: var(--warn-ink); border-color: #ead9a6; }
 .chip-warn { background: var(--warn-bg); color: var(--warn-ink); border-color: #ead9a6; }
 .chiplist { list-style: none; padding: 0; margin: 6px 0 0; }
+.pw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; align-items: start; }
+.pw-panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.pw-panel h3 { margin: 2px 0 6px; }
+.pw-panel .chartbox { border: none; background: transparent; padding: 0; margin-top: 8px; }
+@media (max-width: 880px) { .pw-grid { grid-template-columns: 1fr; } }
 .chartbox { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-top: 10px; }
 canvas { max-width: 100%; }
 .controls { margin-top: 8px; font-size: 14px; }
