@@ -1,10 +1,12 @@
 /* charts.js — theme-aware Chart.js builders + annotation shims.
-   Colours read from CSS tokens at render time; the theme toggle triggers rebuildAll. */
-
+   Colours read from CSS tokens at render time; the theme toggle triggers rebuildAll.
+   Classic script (no ES modules) so the page also works opened directly from disk
+   (file://), where the browser blocks module scripts. API: window.SvarnamCharts. */
+(() => {
 const $ = (s) => document.querySelector(s);
 let CHARTS = {};
 
-export function cssVar(name) {
+function cssVar(name) {
     return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
@@ -100,7 +102,7 @@ function marksForLabels(labels, breaks, mode) {
     return marks;
 }
 
-export function initCharts(rebuildAll) {
+function initCharts(rebuildAll) {
     if (!window.Chart) return;
     window.Chart.register(regimeMarks);
     window.Chart.defaults.font.family = `"${cssVar('--font-ui').split(',')[0].trim()}", Inter, system-ui, sans-serif`;
@@ -119,7 +121,7 @@ export function initCharts(rebuildAll) {
     }
 }
 
-export function syncRem() {
+function syncRem() {
     if (!window.Chart) return;
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
     window.Chart.defaults.font.size = Math.round(rem * 0.75);
@@ -158,7 +160,7 @@ function baseTooltip(rows) {
 }
 
 /* --- flagship: 41-year stacked decomposition (hero section) --------------- */
-export function buildStack(data, mode) {
+function buildStack(data, mode) {
     const rows = mode === 'annual'
         ? data.derived.decomposition_annual
         : data.derived.decomposition_monthly;
@@ -207,7 +209,7 @@ export function buildStack(data, mode) {
 }
 
 /* --- wage: days of work per tola ------------------------------------------ */
-export function buildWage(data, occupation) {
+function buildWage(data, occupation) {
     const th = chartTheme();
     const rows = data.derived.gold_per_wageday
         .filter(r => r.occupation === occupation)
@@ -257,7 +259,7 @@ export function buildWage(data, occupation) {
 }
 
 /* --- MSP: kg per tola ------------------------------------------------------ */
-export function buildMsp(data, crop) {
+function buildMsp(data, crop) {
     const th = chartTheme();
     const rows = data.derived.gold_per_mspkg
         .filter(r => r.crop === crop)
@@ -336,7 +338,7 @@ function drawAnnotation(chart, idx, text, colour) {
 }
 
 /* --- accessibility: data tables ------------------------------------------- */
-export function tableFor(rows) {
+function tableFor(rows) {
     if (!rows.length) return document.createTextNode('No rows.');
     const t = document.createElement('table');
     const keys = Object.keys(rows[0]);
@@ -355,7 +357,7 @@ export function tableFor(rows) {
 }
 
 /* --- hero bar (HTML/CSS, landed-cost base) --------------------------------- */
-export function buildHeroBar(data) {
+function buildHeroBar(data) {
     const rows = data.derived.decomposition_annual;
     const last = rows[rows.length - 1];
     const landed = last.metal_fx_leg + last.duty_leg + last.gst_leg;
@@ -395,7 +397,7 @@ export function buildHeroBar(data) {
 }
 
 /* --- stat tiles -------------------------------------------------------------- */
-export function buildStatTiles(data) {
+function buildStatTiles(data) {
     const rows = data.derived.decomposition_annual;
     const last = rows[rows.length - 1];
     const landed = last.metal_fx_leg + last.duty_leg + last.gst_leg;
@@ -425,3 +427,6 @@ export function buildStatTiles(data) {
     });
     return last;
 }
+
+window.SvarnamCharts = { cssVar, initCharts, syncRem, buildStack, buildWage, buildMsp, buildHeroBar, buildStatTiles, tableFor };
+})();

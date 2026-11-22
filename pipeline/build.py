@@ -1,6 +1,6 @@
 """Build — CLI entry: python -m pipeline.build
 Runs validation first (fails hard), then derives and emits:
-  site/dataset.json, site/sources.md, build_report.txt
+  site/dataset.json + site/dataset.js (file:// fallback mirror), site/sources.md, build_report.txt
 """
 import re
 import csv
@@ -279,6 +279,12 @@ def build(write=True, ci_mode=False):
         os.makedirs(SITE, exist_ok=True)
         with open(os.path.join(SITE, "dataset.json"), "w", encoding="utf-8") as f:
             json.dump(dataset, f, ensure_ascii=False, separators=(",", ":"))
+        # classic-script mirror of dataset.json: main.js falls back to it when
+        # fetch() is unavailable (page opened directly from disk, file://).
+        with open(os.path.join(SITE, "dataset.js"), "w", encoding="utf-8") as f:
+            f.write("window.SVARNAM_DATASET = ")
+            json.dump(dataset, f, ensure_ascii=False, separators=(",", ":"))
+            f.write(";\n")
         with open(os.path.join(SITE, "sources.md"), "w", encoding="utf-8") as f:
             f.write(sources_mod.render_sources_md())
         with open(os.path.join(ROOT, "build_report.txt"), "w", encoding="utf-8") as f:

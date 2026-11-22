@@ -1,7 +1,10 @@
-/* main.js — boot: load dataset.json, hydrate everything from it. Zero hardcoded numbers. */
-import { initCharts, syncRem, buildStack, buildWage, buildMsp, buildHeroBar, buildStatTiles, tableFor, cssVar } from './charts.js';
-import { wireCalculator } from './calculator.js';
-import { wireCsv } from './csv.js';
+/* main.js — boot: load dataset.json, hydrate everything from it. Zero hardcoded numbers.
+   Classic script (no ES modules) so the page also works when opened directly from
+   disk (file://), where the browser blocks module scripts and fetch(). */
+(() => {
+const { initCharts, syncRem, buildStack, buildWage, buildMsp, buildHeroBar, buildStatTiles, tableFor } = window.SvarnamCharts;
+const { wireCalculator } = window.SvarnamCalc;
+const { wireCsv } = window.SvarnamCsv;
 
 const $ = (s) => document.querySelector(s);
 const TOLA = 11.6638038;
@@ -45,19 +48,7 @@ function initScrollAnim() {
     document.querySelectorAll('.chart-anim').forEach(el => io.observe(el));
 }
 
-/* ── segmented control ── */
-function wireSegControl(data) {
-    const annual = $('#segAnnual'), monthly = $('#segMonthly');
-    const set = (mode) => {
-        annual.setAttribute('aria-pressed', String(mode === 'annual'));
-        monthly.setAttribute('aria-pressed', String(mode === 'monthly'));
-        buildStack(data, mode);
-    };
-    annual.addEventListener('click', () => set('annual'));
-    monthly.addEventListener('click', () => set('monthly'));
-}
-
-/* ── table toggles ── */
+/* ── table toggles ── */   /* wireStack below owns the segmented control + the stack table */
 function wireTableToggle(btnId, tableId, render) {
     const btn = $(btnId), table = $(tableId);
     btn.addEventListener('click', () => {
@@ -188,10 +179,31 @@ function wireStack(data) {
         }))));
 }
 
+/* dataset.json via fetch on http(s). On file:// fetch() is blocked by the
+   browser — fall back to the build-generated dataset.js (window.SVARNAM_DATASET,
+   same artifact, written by pipeline/build.py next to dataset.json). */
+async function loadDataset() {
+    try {
+        const res = await fetch('dataset.json');
+        if (!res.ok) throw new Error('dataset.json HTTP ' + res.status);
+        return await res.json();
+    } catch (err) {
+        if (!window.SVARNAM_DATASET) {
+            await new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = 'dataset.js';
+                s.onload = resolve;
+                s.onerror = () => reject(new Error('dataset.json could not be fetched and the dataset.js fallback failed to load'));
+                document.head.appendChild(s);
+            });
+        }
+        if (window.SVARNAM_DATASET) return window.SVARNAM_DATASET;
+        throw err;
+    }
+}
+
 async function boot() {
-    const res = await fetch('dataset.json');
-    if (!res.ok) throw new Error('dataset.json HTTP ' + res.status);
-    const data = await res.json();
+    const data = await loadDataset();
     window.__RGS = data;
 
     initTheme();
@@ -212,7 +224,7 @@ async function boot() {
     buildStack(data, 'annual');
     buildHeroBar(data);
     buildStatTiles(data);
-    wireSegControl(data);
+    wireStack(data);
     wirePurchasing(data);
     renderBreaks(data.policy.breaks);
     renderEpisodes(data.policy.episodes);
@@ -225,13 +237,21 @@ async function boot() {
 boot().catch(err => {
     window.__bootError = err;
     document.body.classList.add('fatal');
-    const el = $('#fatalMsg');
-    if (el) {
-        el.classList.remove('hidden');
-        el.textContent = 'The dataset failed to load: ' + err.message;
-        const st = document.createElement('pre');
-        st.id = 'fatalStack';
-        st.textContent = err.stack || '(no stack)';
-        el.after(st);
+    let el = $('#fatalMsg');
+    if (!el) {
+        // the markup has no dedicated banner — surface the failure visibly anyway
+        el = document.createElement('div');
+        el.id = 'fatalMsg';
+        el.style.cssText = 'margin:16px auto;max-width:720px;padding:14px 18px;border:1px solid #b3261e;'
+            + 'border-radius:12px;background:#FDF6E3;color:#1B1712;font:14px/1.5 system-ui,sans-serif';
+        document.body.prepend(el);
     }
+    el.classList.remove('hidden');
+    el.textContent = 'The page failed to load its dataset: ' + err.message
+        + ' — if you opened this file straight from disk, check that dataset.js sits next to index.html.';
+    const st = document.createElement('pre');
+    st.id = 'fatalStack';
+    st.textContent = err.stack || '(no stack)';
+    el.after(st);
 });
+})();

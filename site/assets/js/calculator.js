@@ -1,8 +1,9 @@
-/* calculator.js — FR5: pure client-side grams conversion. No network, no storage. */
-
+/* calculator.js — FR5: pure client-side grams conversion. No network, no storage.
+   Classic script so the page also works opened directly from disk; exposes window.SvarnamCalc. */
+(() => {
 const $ = (s) => document.querySelector(s);
 
-export function wireCalculator(data) {
+function wireCalculator(data) {
   const rows = data.derived.decomposition_monthly;
   const latestMonthly = rows.length ? rows[rows.length - 1].mumbai_inr_10g : null;
   const pricePerGram = latestMonthly != null ? latestMonthly / 10 : null;
@@ -33,3 +34,6 @@ export function wireCalculator(data) {
   priceInput.addEventListener('input', compute);
   compute();
 }
+
+window.SvarnamCalc = { wireCalculator };
+})();
