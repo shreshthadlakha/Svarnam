@@ -40,8 +40,7 @@ export function flatten(data) {
 }
 
 export function wireCsv(data) {
-  const btn = document.getElementById('csvBtn');
-  btn.addEventListener('click', () => {
+  const download = () => {
     const blob = new Blob([toCsv(data)], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -49,5 +48,9 @@ export function wireCsv(data) {
     document.body.appendChild(a);
     a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800);
+  };
+  ['csvBtn', 'csvBtnFooter'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', (e) => { e.preventDefault(); download(); });
   });
 }

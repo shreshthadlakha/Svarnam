@@ -10,7 +10,7 @@ jobs:
         with:
           python-version: '3.13'
       - name: Install deps
-        run: pip install pandas openpyxl lxml pytest
+        run: pip install pandas openpyxl lxml pytest pillow
       - name: Parser fixtures + invariants
         run: python -m pytest pipeline/tests -q
       - name: A7 advice-language gate (tag-stripped site copy)

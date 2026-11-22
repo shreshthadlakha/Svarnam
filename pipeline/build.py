@@ -139,6 +139,49 @@ def _merge_notes(t164_rows, domestic_merged, merge_info, usd_rows, usd_merged,
     return out
 
 
+def _og_font(size, bold=False):
+    from PIL import ImageFont
+    import platform
+    names = (["georgiab.ttf", "timesbd.ttf"] if bold else ["georgia.ttf", "times.ttf"])
+    if platform.system() != "Windows":
+        names = (["DejaVuSerif-Bold.ttf"] if bold else ["DejaVuSerif.ttf"]) + names
+    for n in names:
+        for base in (os.environ.get("WINDIR", "C:\\Windows") + "\\Fonts\\", "/usr/share/fonts/truetype/dejavu/"):
+            fp = base + n
+            if os.path.isfile(fp):
+                return ImageFont.truetype(fp, size)
+    return ImageFont.load_default()
+
+
+def generate_og(last):
+    """Build-time OG image: ivory ground, 3-bar logo mark, wordmark, big price."""
+    try:
+        from PIL import Image, ImageDraw
+        img = Image.new("RGB", (1200, 630), "#FBF7EE")
+        dr = ImageDraw.Draw(img)
+        # logo mark: three bars
+        bars = [(80, 350, 120, 440, "#C79A2B"), (208, 400, 218, 440, "#8C3B2A"), (226, 380, 236, 440, "#2E6F62")]
+        for x1, y1, x2, y2, c in bars:
+            dr.rounded_rectangle([x1, y1, x2, y2], radius=4, fill=c)
+        # wordmark
+        f64 = _og_font(52)
+        dr.text((80, 140), "Svarnam", font=f64, fill="#1B1712")
+        dr.text((80, 210), "\u0938\u094d\u0935\u0930\u094d\u0923\u092e\u094d", font=_og_font(24), fill="#6B6252")
+        # price
+        price = f"\u20b9{last['mumbai_inr_10g']:,.0f}"
+        f72 = _og_font(72, bold=True)
+        dr.text((80, 420), price, font=f72, fill="#1B1712")
+        f20 = _og_font(20)
+        dr.text((80, 510), "per 10 g \u00b7 Mumbai \u00b7 " + last["fy"].replace("-", "\u2013") + " average", font=f20, fill="#4A4338")
+        dr.text((80, 560), "what a tola of gold is made of", font=_og_font(16), fill="#A57808")
+        out = os.path.join(SITE, "og.png")
+        img.save(out, "PNG")
+        return os.path.getsize(out)
+    except Exception as exc:
+        print("OG generation skipped:", exc)
+        return 0
+
+
 def build(write=True, ci_mode=False):
     cal = policy_mod.load_duty_calendar()
     breaks = policy_mod.load_breaks()
@@ -240,6 +283,15 @@ def build(write=True, ci_mode=False):
             f.write(sources_mod.render_sources_md())
         with open(os.path.join(ROOT, "build_report.txt"), "w", encoding="utf-8") as f:
             f.write(report_txt)
+        # inject price into meta description
+        idx_path = os.path.join(SITE, "index.html")
+        if os.path.isfile(idx_path):
+            idx = open(idx_path, encoding="utf-8").read()
+            idx = idx.replace("{{PRICE_INR}}", f"{last_mumbai:,.0f}") if (last_mumbai := last.get("mumbai_inr_10g")) else idx
+            open(idx_path, "w", encoding="utf-8").write(idx)
+        # OG image
+        if last and last.get("mumbai_inr_10g"):
+            generate_og(last)
     return dataset, report_txt
 
 

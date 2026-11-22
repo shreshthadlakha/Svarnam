@@ -1,19 +1,45 @@
-/* charts.js — Chart.js builders + annotation shims. Okabe-Ito hues; marks use the
-   luminance-darkened variants (#B26A00 / #00805C) that pass WCAG 1.4.11 3:1 on paper. */
+/* charts.js — theme-aware Chart.js builders + annotation shims.
+   Colours read from CSS tokens at render time; the theme toggle triggers rebuildAll. */
 
 const $ = (s) => document.querySelector(s);
 let CHARTS = {};
 
-export const TOLA_G = 11.6638038; // 1 tola = 11.6638038 g (display-level constant)
-const PALETTE = { metal: '#B26A00', duty: '#D55E00', gst: '#00805C', premium: '#0072B2' };
-
-export function syncRem() {
-    if (!window.Chart) return;
-    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-    window.Chart.defaults.font.size = Math.round(rem * 0.75);
+export function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
-/* --- regime-break shim: dashed lines + numbered badges ------------------- */
+function chartTheme() {
+    return {
+        ink: cssVar('--ink'),
+        ink2: cssVar('--ink-2'),
+        ink3: cssVar('--ink-3'),
+        line: cssVar('--line'),
+        lineStrong: cssVar('--line-strong'),
+        surface: cssVar('--surface'),
+        gold: cssVar('--c-metal'),
+        rust: cssVar('--c-duty'),
+        green: cssVar('--c-gst'),
+        residualHatch: cssVar('--residual-hatch'),
+        residualInk: cssVar('--ink-3'),
+    };
+}
+
+function hatchPattern(inkColour) {
+    const c = document.createElement('canvas');
+    c.width = 8; c.height = 8;
+    const ctx = c.getContext('2d');
+    ctx.strokeStyle = inkColour;
+    ctx.lineWidth = 1.2;
+    ctx.globalAlpha = 0.55;
+    ctx.beginPath();
+    ctx.moveTo(0, 8); ctx.lineTo(8, 0);
+    ctx.moveTo(-2, 2); ctx.lineTo(2, -2);
+    ctx.moveTo(6, 10); ctx.lineTo(10, 6);
+    ctx.stroke();
+    return ctx.createPattern(c, 'repeat');
+}
+
+/* --- regime-break shim: dashed rules + numbered flags -------------------- */
 const regimeMarks = {
     id: 'regimeMarks',
     afterDatasetsDraw(chart) {
@@ -28,100 +54,29 @@ const regimeMarks = {
             const px = px0 + (used[Math.round(px0 / 10)] || 0) * 10;
             used[Math.round(px0 / 10)] = (used[Math.round(px0 / 10)] || 0) + 1;
             ctx.save();
-            ctx.strokeStyle = 'rgba(107,91,46,.8)';
+            ctx.strokeStyle = cssVar('--residual-hatch');
+            ctx.globalAlpha = 0.7;
             ctx.setLineDash([4, 3]);
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 1.2;
             ctx.beginPath();
             ctx.moveTo(px, area.top);
             ctx.lineTo(px, area.bottom);
             ctx.stroke();
             ctx.setLineDash([]);
+            ctx.globalAlpha = 1;
             const by = area.top + 11;
             ctx.beginPath();
             ctx.arc(px, by, 9, 0, Math.PI * 2);
-            ctx.fillStyle = '#6b5b2e';
+            ctx.fillStyle = cssVar('--ink-3');
             ctx.fill();
-            ctx.strokeStyle = '#faf7ef';
+            ctx.strokeStyle = cssVar('--surface');
             ctx.lineWidth = 1.4;
             ctx.stroke();
-            ctx.fillStyle = '#fff';
-            ctx.font = `bold ${Math.round(10)}px system-ui`;
+            ctx.fillStyle = cssVar('--surface');
+            ctx.font = 'bold 10px ' + cssVar('--font-ui').split(',')[0] + ', system-ui';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(String(m.n), px, by);
-            ctx.restore();
-        });
-    },
-};
-
-/* --- flagship end-labels: the 4 legs labelled at the last column --------- */
-const endLabels = {
-    id: 'endLabels',
-    afterDatasetsDraw(chart) {
-        const cfg = chart.$endLabels;
-        if (!cfg) return;
-        const { ctx, chartArea: area, scales: { x, y } } = chart;
-        const last = chart.data.labels.length - 1;
-        if (last < 0) return;
-        const px0 = x.getPixelForValue(last);
-        if (!isFinite(px0)) return;
-        const d = chart.data.datasets.map(ds => ds.data[last] || 0);
-        const mids = [
-            d[0] / 2,
-            d[0] + d[1] / 2,
-            d[0] + d[1] + d[2] / 2,
-            d[0] + d[1] + d[2] + d[3] / 2,
-        ];
-        let pxs = mids.map(v => y.getPixelForValue(v));
-        // enforce minimum 16px separation (sliver legs cluster)
-        for (let i = 1; i < pxs.length; i++) {
-            if (pxs[i] - pxs[i - 1] < 16) pxs[i] = pxs[i - 1] + 16;
-        }
-        const names = ['metal + FX', 'duty', 'GST', 'premium'];
-        const cols = [PALETTE.metal, PALETTE.duty, PALETTE.gst, PALETTE.premium];
-        ctx.save();
-        ctx.font = '600 11px system-ui';
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'middle';
-        names.forEach((name, i) => {
-            const px = Math.min(pxs[i], area.bottom - 8);
-            ctx.fillStyle = cols[i];
-            ctx.fillText(name, area.right + 6, px);
-        });
-        ctx.restore();
-    },
-};
-
-/* --- flagship callouts: two load-bearing moments ------------------------- */
-const CALLOUTS = [
-    { fy: '2013-14', text: '80:20 curbs: premiums spike' },
-    { fy: '2024-25', text: 'Duty cut → discounts' },
-];
-const calloutsPlugin = {
-    id: 'callouts',
-    afterDatasetsDraw(chart) {
-        const cfg = chart.$callouts;
-        if (!cfg) return;
-        const { ctx, chartArea: area, scales: { x, y } } = chart;
-        const labels = chart.data.labels;
-        cfg.forEach(c => {
-            const idx = labels.indexOf(c.fy);
-            if (idx < 0) return;
-            const px = x.getPixelForValue(idx);
-            if (!isFinite(px) || px < area.left || px > area.right) return;
-            const total = chart.data.datasets.reduce((s, ds) => s + (ds.data[idx] || 0), 0);
-            const topPx = y.getPixelForValue(total);
-            ctx.save();
-            ctx.strokeStyle = 'rgba(34,33,29,.45)';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(px, topPx - 4);
-            ctx.lineTo(px, topPx - 22);
-            ctx.stroke();
-            ctx.fillStyle = '#22211d';
-            ctx.font = '600 11px system-ui';
-            ctx.textAlign = px > area.right - 110 ? 'right' : 'center';
-            ctx.fillText(c.text, px, topPx - 28);
             ctx.restore();
         });
     },
@@ -138,8 +93,6 @@ function marksForLabels(labels, breaks, mode) {
     const idxOf = new Map(labels.map((l, i) => [l, i]));
     const marks = [];
     breaks.forEach((b, n) => {
-        // FY labels ("1985-86") and month labels ("2026-10") are BOTH 7 chars with a
-        // dash — never guess the basis from label shape; the caller passes the mode.
         const key = mode === 'monthly' ? b.date.slice(0, 7) : fyOfDate(b.date);
         const idx = idxOf.get(key);
         if (idx !== undefined) marks.push({ index: idx, n: n + 1 });
@@ -149,12 +102,11 @@ function marksForLabels(labels, breaks, mode) {
 
 export function initCharts(rebuildAll) {
     if (!window.Chart) return;
-    window.Chart.register(regimeMarks, endLabels, calloutsPlugin);
-    window.Chart.defaults.font.family = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
-    window.Chart.defaults.color = '#22211d';
+    window.Chart.register(regimeMarks);
+    window.Chart.defaults.font.family = `"${cssVar('--font-ui').split(',')[0].trim()}", Inter, system-ui, sans-serif`;
+    window.Chart.defaults.color = cssVar('--ink-2');
     syncRem();
     if (rebuildAll) {
-        // rebuild charts when the user's base font size changes (rem scaling)
         const probe = document.createElement('div');
         probe.style.cssText = 'position:absolute;height:1em;width:0;visibility:hidden';
         document.body.appendChild(probe);
@@ -167,101 +119,101 @@ export function initCharts(rebuildAll) {
     }
 }
 
-/* --- flagship: 41-year stacked decomposition (the hero) ------------------- */
-export function buildFlagship(data) {
-    const rows = data.derived.decomposition_annual;
-    const labels = rows.map(r => r.fy);
-    const mk = (field, label, color) => ({
-        label, data: rows.map(r => r[field]), backgroundColor: color,
-        borderColor: '#faf7ef', borderWidth: 1, stack: 's', order: 2,
-    });
-    const ds = [
-        mk('metal_fx_leg', 'metal + FX', PALETTE.metal),
-        mk('duty_leg', 'duty', PALETTE.duty),
-        mk('gst_leg', 'GST', PALETTE.gst),
-        mk('premium_leg', 'premium (signed)', PALETTE.premium),
-    ];
-    if (CHARTS.flagship) CHARTS.flagship.destroy();
-    CHARTS.flagship = new window.Chart($('#flagshipChart'), {
-        type: 'bar',
-        data: { labels, datasets: ds },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            layout: { padding: { right: 92 } },
-            plugins: {
-                legend: { display: false },
-                tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ₹${(+c.raw).toLocaleString('en-IN')}` } },
-            },
-            scales: {
-                x: { stacked: true, ticks: { maxRotation: 90, minRotation: 45, autoSkip: false, font: { size: 10 } } },
-                y: {
-                    stacked: true,
-                    grid: {
-                        color: (c) => (c.tick && c.tick.value === 0) ? '#8a8576' : '#eee7d6',
-                        lineWidth: (c) => (c.tick && c.tick.value === 0) ? 1.4 : 0.5,
-                    },
-                    ticks: { callback: (v) => '₹' + (+v).toLocaleString('en-IN') },
-                },
-            },
-        },
-    });
-    CHARTS.flagship.$regimeMarks = marksForLabels(labels, data.policy.breaks, 'annual');
-    CHARTS.flagship.$endLabels = true;
-    CHARTS.flagship.$callouts = CALLOUTS;
+export function syncRem() {
+    if (!window.Chart) return;
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    window.Chart.defaults.font.size = Math.round(rem * 0.75);
 }
 
-/* --- monthly picture ------------------------------------------------------ */
-export function buildMonthly(data) {
-    const rows = data.derived.decomposition_monthly;
-    const labels = rows.map(r => r.month);
-    const mk = (field, label, color) => ({
+function baseTooltip(rows) {
+    const th = chartTheme();
+    return {
+        backgroundColor: th.surface,
+        titleColor: th.ink,
+        bodyColor: th.ink2,
+        borderColor: th.lineStrong,
+        borderWidth: 1,
+        borderRadius: 12,
+        padding: 14,
+        callbacks: {
+            title: (items) => rows[items[0].dataIndex]?.fy || rows[items[0].dataIndex]?.month || items[0].label,
+            label: (c) => '',
+            afterBody: (items) => {
+                const idx = items[0].dataIndex;
+                const r = rows[idx];
+                if (!r) return [];
+                const fmt = (v) => '₹' + Math.round(v).toLocaleString('en-IN');
+                return [
+                    `metal + FX  ${fmt(r.metal_fx_leg)}`,
+                    `duty         ${fmt(r.duty_leg)}`,
+                    `GST          ${fmt(r.gst_leg)}`,
+                    `landed cost  ${fmt(r.landed_cost)}`,
+                    `published    ${fmt(r.mumbai_inr_10g)}`,
+                    `premium      ${r.premium_pct >= 0 ? '+' : ''}${r.premium_pct}%`,
+                ];
+            },
+        },
+        displayColors: false,
+    };
+}
+
+/* --- flagship: 41-year stacked decomposition (hero section) --------------- */
+export function buildStack(data, mode) {
+    const rows = mode === 'annual'
+        ? data.derived.decomposition_annual
+        : data.derived.decomposition_monthly;
+    const th = chartTheme();
+    const labels = rows.map(r => r.fy || r.month);
+    const hatch = hatchPattern(th.residualHatch);
+    const mk = (field, label, color, extra) => ({
         label, data: rows.map(r => r[field]), backgroundColor: color,
-        borderColor: '#faf7ef', borderWidth: 1, stack: 's',
+        borderColor: cssVar('--surface'), borderWidth: 1, stack: 's',
+        ...extra,
     });
     const ds = [
-        mk('metal_fx_leg', 'metal + FX', PALETTE.metal),
-        mk('duty_leg', 'duty', PALETTE.duty),
-        mk('gst_leg', 'GST', PALETTE.gst),
-        mk('premium_leg', 'premium (signed)', PALETTE.premium),
+        mk('metal_fx_leg', 'metal + FX', th.gold),
+        mk('duty_leg', 'duty', th.rust),
+        mk('gst_leg', 'GST', th.green),
+        mk('premium_leg', 'residual (hatched)', hatch),
     ];
-    if (CHARTS.monthly) CHARTS.monthly.destroy();
-    CHARTS.monthly = new window.Chart($('#monthlyChart'), {
+    if (CHARTS.stack) CHARTS.stack.destroy();
+    CHARTS.stack = new window.Chart($('#stackChart'), {
         type: 'bar',
         data: { labels, datasets: ds },
         options: {
             responsive: true, maintainAspectRatio: false,
+            animation: { duration: 300, easing: 'ease-out' },
             plugins: {
-                legend: { position: 'top', labels: { font: { size: 11 } } },
-                tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ₹${(+c.raw).toLocaleString('en-IN')} (${c.dataset.label === 'premium (signed)' ? '' : ''}${(+c.raw).toFixed(0)})` } },
+                legend: { position: 'top', labels: { font: { size: 12 }, color: th.ink2, boxWidth: 14, boxHeight: 14, borderRadius: 2 } },
+                tooltip: baseTooltip(rows),
             },
             scales: {
                 x: {
                     stacked: true,
-                    ticks: {
-                        callback: (v, i) => (labels[i] && labels[i].endsWith('-01')) ? labels[i].slice(0, 4) : '',
-                        autoSkip: false, maxRotation: 0, font: { size: 10 },
-                    },
+                    grid: { display: false },
+                    border: { color: th.line },
+                    ticks: { maxRotation: 45, minRotation: 0, autoSkip: mode === 'annual' ? false : true, maxTicksLimit: mode === 'annual' ? 41 : 25, font: { size: 11 }, color: th.ink3 },
                 },
                 y: {
                     stacked: true,
-                    grid: {
-                        color: (c) => (c.tick && c.tick.value === 0) ? '#8a8576' : '#eee7d6',
-                        lineWidth: (c) => (c.tick && c.tick.value === 0) ? 1.4 : 0.5,
-                    },
-                    ticks: { callback: (v) => '₹' + (+v).toLocaleString('en-IN') },
+                    grid: { color: th.line, lineWidth: (c) => (c.tick && c.tick.value === 0) ? 1.4 : 0.5 },
+                    border: { display: false },
+                    ticks: { maxTicksLimit: 6, callback: (v) => '₹' + (+v).toLocaleString('en-IN'), color: th.ink3, font: { size: 12 } },
                 },
             },
         },
     });
-    CHARTS.monthly.$regimeMarks = marksForLabels(labels, data.policy.breaks, 'monthly');
+    CHARTS.stack.$regimeMarks = marksForLabels(labels, data.policy.breaks, mode);
 }
 
-/* --- purchasing: per-tola units (FT-style rescale) ------------------------ */
+/* --- wage: days of work per tola ------------------------------------------ */
 export function buildWage(data, occupation) {
+    const th = chartTheme();
     const rows = data.derived.gold_per_wageday
         .filter(r => r.occupation === occupation)
         .sort((a, b) => a.fy.localeCompare(b.fy));
-    const daysPerTola = rows.map(r => (r.grams && r.grams > 0) ? TOLA_G / r.grams : null);
+    const days = rows.map(r => (r.grams && r.grams > 0) ? 11.6638038 / r.grams : null);
+    const reclassIdx = rows.findIndex(r => r.fy === '2014-15');
     if (CHARTS.wage) CHARTS.wage.destroy();
     CHARTS.wage = new window.Chart($('#wageChart'), {
         type: 'line',
@@ -269,28 +221,48 @@ export function buildWage(data, occupation) {
             labels: rows.map(r => r.fy),
             datasets: [{
                 label: `days of ${occupation} work per tola`,
-                data: daysPerTola,
-                borderColor: PALETTE.metal, pointBackgroundColor: PALETTE.metal,
-                tension: 0.15, pointRadius: 2.5, borderWidth: 2.5,
+                data: days,
+                borderColor: th.gold, pointBackgroundColor: th.gold,
+                pointRadius: 3, borderWidth: 2.5, tension: 0.2,
             }],
         },
         options: {
             responsive: true, maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
-                tooltip: { callbacks: { label: (c) => `${(+c.parsed.y).toLocaleString('en-IN', { maximumFractionDigits: 0 })} days of work per tola` } },
+                tooltip: {
+                    backgroundColor: cssVar('--surface'), titleColor: cssVar('--ink'),
+                    bodyColor: cssVar('--ink-2'), borderColor: cssVar('--line-strong'),
+                    borderWidth: 1, borderRadius: 12, padding: 12, displayColors: false,
+                    callbacks: { label: (c) => `${Math.round(+c.parsed.y).toLocaleString('en-IN')} days of work per tola` },
+                },
             },
-            scales: { y: { beginAtZero: true, ticks: { callback: (v) => v.toLocaleString('en-IN') + ' d' } } },
+            scales: {
+                x: { grid: { display: false }, border: { color: th.line }, ticks: { font: { size: 11 }, color: th.ink3, maxRotation: 45 } },
+                y: { beginAtZero: true, grid: { color: th.line }, border: { display: false }, ticks: { maxTicksLimit: 6, callback: (v) => v.toLocaleString('en-IN') + ' d', color: th.ink3, font: { size: 12 } } },
+            },
         },
     });
+    // end label: latest value
+    const lastMeta = CHARTS.wage.getDatasetMeta(0);
+    const lastEl = lastMeta.data[lastMeta.data.length - 1];
+    if (lastEl && days[days.length - 1] != null) {
+        drawEndLabel(CHARTS.wage, lastEl.x, lastEl.y, Math.round(days[days.length - 1]).toLocaleString('en-IN') + ' d', th.gold);
+    }
+    // reclassification annotation
+    if (reclassIdx > 0) {
+        drawAnnotation(CHARTS.wage, reclassIdx, 'Nov 2013: occupations reclassified', th.ink3);
+    }
     return rows;
 }
 
+/* --- MSP: kg per tola ------------------------------------------------------ */
 export function buildMsp(data, crop) {
+    const th = chartTheme();
     const rows = data.derived.gold_per_mspkg
         .filter(r => r.crop === crop)
         .sort((a, b) => a.crop_year.localeCompare(b.crop_year));
-    const kgPerTola = rows.map(r => (r.grams && r.grams > 0) ? TOLA_G / r.grams : null);
+    const kg = rows.map(r => (r.grams && r.grams > 0) ? 11.6638038 / r.grams : null);
     if (CHARTS.msp) CHARTS.msp.destroy();
     CHARTS.msp = new window.Chart($('#mspChart'), {
         type: 'line',
@@ -298,51 +270,69 @@ export function buildMsp(data, crop) {
             labels: rows.map(r => r.crop_year),
             datasets: [{
                 label: `kg of ${crop} per tola`,
-                data: kgPerTola,
-                borderColor: PALETTE.gst, pointBackgroundColor: PALETTE.gst,
-                tension: 0.15, pointRadius: 2.5, borderWidth: 2.5,
+                data: kg,
+                borderColor: th.gold, pointBackgroundColor: th.gold,
+                pointRadius: 3, borderWidth: 2.5, tension: 0.2,
             }],
         },
         options: {
             responsive: true, maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
-                tooltip: { callbacks: { label: (c) => `${(+c.parsed.y).toLocaleString('en-IN', { maximumFractionDigits: 0 })} kg per tola` } },
+                tooltip: {
+                    backgroundColor: cssVar('--surface'), titleColor: cssVar('--ink'),
+                    bodyColor: cssVar('--ink-2'), borderColor: cssVar('--line-strong'),
+                    borderWidth: 1, borderRadius: 12, padding: 12, displayColors: false,
+                    callbacks: { label: (c) => `${Math.round(+c.parsed.y).toLocaleString('en-IN')} kg per tola` },
+                },
             },
-            scales: { y: { beginAtZero: true, ticks: { callback: (v) => v.toLocaleString('en-IN') + ' kg' } } },
+            scales: {
+                x: { grid: { display: false }, border: { color: th.line }, ticks: { font: { size: 11 }, color: th.ink3, maxRotation: 45 } },
+                y: { beginAtZero: true, grid: { color: th.line }, border: { display: false }, ticks: { maxTicksLimit: 6, callback: (v) => v.toLocaleString('en-IN') + ' kg', color: th.ink3, font: { size: 12 } } },
+            },
         },
     });
+    const lastMeta = CHARTS.msp.getDatasetMeta(0);
+    const lastEl = lastMeta.data[lastMeta.data.length - 1];
+    if (lastEl && kg[kg.length - 1] != null) {
+        drawEndLabel(CHARTS.msp, lastEl.x, lastEl.y, Math.round(kg[kg.length - 1]).toLocaleString('en-IN') + ' kg', th.gold);
+    }
     return rows;
 }
 
-/* --- hero decomposition rows ---------------------------------------------- */
-export function buildHeroRows(data) {
-    const rows = data.derived.decomposition_annual;
-    const last = rows[rows.length - 1];
-    const host = $('#decompRows');
-    if (!host) return last;
-    const items = [
-        { name: 'metal + FX', v: last.metal_fx_leg, c: PALETTE.metal },
-        { name: 'customs duty', v: last.duty_leg, c: PALETTE.duty },
-        { name: 'GST', v: last.gst_leg, c: PALETTE.gst },
-        { name: 'premium (signed)', v: last.premium_leg, c: PALETTE.premium },
-    ];
-    const landed = last.landed_cost;
-    host.innerHTML = '';
-    items.forEach(it => {
-        const share = (it.v / landed * 100);
-        const d = document.createElement('div');
-        d.className = 'drow';
-        const left = document.createElement('span');
-        const dot = document.createElement('span');
-        dot.className = 'dot'; dot.style.background = it.c;
-        left.append(dot, document.createTextNode(it.name));
-        const right = document.createElement('span');
-        right.innerHTML = `₹${Math.abs(it.v).toLocaleString('en-IN', { maximumFractionDigits: 0 })} <span class="share">· ${share >= 0 ? '' : '−'}${Math.abs(share).toFixed(1)}%${it.v < 0 ? ' below landed cost' : ''}</span>`;
-        d.append(left, right);
-        host.appendChild(d);
-    });
-    return last;
+/* --- end label + annotation helpers --------------------------------------- */
+function drawEndLabel(chart, x, y, text, colour) {
+    const { ctx, chartArea: area } = chart;
+    ctx.save();
+    ctx.font = '600 12px ' + cssVar('--font-ui').split(',')[0] + ', Inter, sans-serif';
+    ctx.fillStyle = colour;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, x + 8, Math.min(Math.max(y, area.top + 8), area.bottom - 8));
+    ctx.restore();
+}
+
+function drawAnnotation(chart, idx, text, colour) {
+    const meta = chart.getDatasetMeta(0);
+    const el = meta.data[idx];
+    if (!el) return;
+    const { ctx, chartArea: area } = chart;
+    ctx.save();
+    ctx.strokeStyle = colour;
+    ctx.globalAlpha = 0.5;
+    ctx.setLineDash([3, 3]);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(el.x, area.top);
+    ctx.lineTo(el.x, area.bottom);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+    ctx.font = '10px ' + cssVar('--font-ui').split(',')[0] + ', system-ui';
+    ctx.fillStyle = colour;
+    ctx.textAlign = 'center';
+    ctx.fillText(text, el.x, area.top + 12);
+    ctx.restore();
 }
 
 /* --- accessibility: data tables ------------------------------------------- */
@@ -362,4 +352,76 @@ export function tableFor(rows) {
     });
     t.append(thead, tbody);
     return t;
+}
+
+/* --- hero bar (HTML/CSS, landed-cost base) --------------------------------- */
+export function buildHeroBar(data) {
+    const rows = data.derived.decomposition_annual;
+    const last = rows[rows.length - 1];
+    const landed = last.metal_fx_leg + last.duty_leg + last.gst_leg;
+    const mumbai = last.mumbai_inr_10g;
+    const total = Math.max(landed, mumbai);
+    const shares = {
+        metal: last.metal_fx_leg / total * 100,
+        duty: last.duty_leg / total * 100,
+        gst: last.gst_leg / total * 100,
+    };
+    const markerPct = mumbai / total * 100;
+    const bar = $('#heroBar');
+    if (!bar) return last;
+    $('#segMetal').style.setProperty('--w', shares.metal + '%');
+    $('#segDuty').style.setProperty('--w', shares.duty + '%');
+    $('#segGst').style.setProperty('--w', shares.gst + '%');
+    const marker = $('#heroMarker');
+    marker.style.left = markerPct + '%';
+    const hatch = $('#heroHatch');
+    if (mumbai < landed) {
+        // discount: hatch between marker and bar end
+        hatch.style.left = markerPct + '%';
+        hatch.style.width = (100 - markerPct) + '%';
+        hatch.style.display = 'block';
+    } else if (mumbai > landed) {
+        // premium: hatch between bar end and marker
+        const landedPct = landed / total * 100;
+        hatch.style.left = landedPct + '%';
+        hatch.style.width = (markerPct - landedPct) + '%';
+        hatch.style.display = 'block';
+    } else {
+        hatch.style.display = 'none';
+    }
+    // animate
+    requestAnimationFrame(() => requestAnimationFrame(() => bar.classList.add('loaded')));
+    return last;
+}
+
+/* --- stat tiles -------------------------------------------------------------- */
+export function buildStatTiles(data) {
+    const rows = data.derived.decomposition_annual;
+    const last = rows[rows.length - 1];
+    const landed = last.metal_fx_leg + last.duty_leg + last.gst_leg;
+    const th = chartTheme();
+    const host = $('#statTiles');
+    if (!host) return last;
+    host.innerHTML = '';
+    const items = [
+        { name: 'metal + FX', v: last.metal_fx_leg, c: th.gold, hatch: false },
+        { name: 'customs duty', v: last.duty_leg, c: th.rust, hatch: false },
+        { name: 'GST', v: last.gst_leg, c: th.green, hatch: false },
+        { name: 'premium', v: last.premium_leg, c: th.residualInk, hatch: true },
+    ];
+    items.forEach(it => {
+        const share = (it.v / landed * 100);
+        const d = document.createElement('div');
+        d.className = 'stat-tile' + (it.hatch ? ' residual' : '');
+        d.style.setProperty('--tile-c', it.c);
+        const num = document.createElement('div');
+        num.className = 'num';
+        num.textContent = `${share >= 0 ? '' : '−'}${Math.abs(share).toFixed(1)}%`;
+        const lbl = document.createElement('div');
+        lbl.className = 'lbl';
+        lbl.textContent = it.name;
+        d.append(num, lbl);
+        host.appendChild(d);
+    });
+    return last;
 }

@@ -3,142 +3,177 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Svarnam — what a tola of gold is made of</title>
-<meta name="description" content="What is ₹1.18 lakh / 10g of gold made of? Metal, dollar, tax, local premium — decomposed from public data, FY1985-86 → today. Model, not advice.">
+<title>Svarnam — what India's gold price is made of</title>
+<meta name="description" content="What is ₹{{PRICE_INR}} / 10g of gold made of? Metal, dollar, tax, local premium — decomposed from public data, FY1985-86 → today. Model, not advice.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:title" content="Svarnam — what India's gold price is made of">
+<meta property="og:description" content="Metal, dollar, tax, local premium — the rupee gold price, decomposed from public data alone.">
+<meta property="og:image" content="og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-<header class="hero">
-  <div class="masthead">
-  <span class="wordmark"><span class="lozenge" aria-hidden="true"></span>Svarnam</span>
-  <span class="masthead-tag">what a tola of gold is made of</span>
-</div>
-<hr class="masthead-rule">
-  <h1>What is India's rupee gold price <em>made of</em>?</h1>
-  <p class="answer" id="answerLine">…</p>
-
-  <p class="truststrip" id="trustStrip">
-    <a class="tbadge" href="#disclaimer">Model, not advice</a>
-    <a class="tbadge" href="#sourcesSec">15 public sources — every number links home</a>
-    <span class="tbadge">No analytics, no tracking — nothing sent anywhere</span>
-  </p>
-
-  <div class="flagship">
-    <p class="chart-title">Metal and the dollar set the price; Delhi and the market move the rest</p>
-    <p class="chart-sub">Mumbai ₹/10g per financial year · RBI Table 35 · 9 numbered policy breaks</p>
-    <div class="flagship-chart-wrap"><canvas id="flagshipChart" role="img" aria-label="Stacked columns: Mumbai rupee gold price per financial year, split into metal-plus-dollar, customs duty, GST and premium" aria-describedby="flagshipDesc"></canvas></div>
-    <p class="chart-desc" id="flagshipDesc">The rupee price of gold has risen in almost every decade since FY1985-86. The gold-coloured metal leg dominates every year; duty, GST and the premium explain the rest. Numbered dashed lines mark nine policy breaks — each is explained in the list under the chart.</p>
-    <h3 class="breaks-h">The nine policy breaks on the chart</h3>
-    <ul id="breakList" class="chiplist"></ul>
-  </div>
-
-  <div class="decomp-rows" id="decompRows" aria-label="Latest-year decomposition as labelled rows"></div>
-
-  <p class="stamp">
-    <span class="chip">Wage data: FY2023-24 (upstream lag)</span>
-    <span class="chip">Monthly prices to <span id="monthlyLast">…</span></span>
-    <span class="chip chip-prov">provisional</span>
-    <span class="chip chip-warn">source break 1999-2000 / 2000-01</span>
-    <span class="chip chip-warn">pre-1990 not modeled (Gold Control Act era)</span>
-    <span class="chip">Last source check: 2026-11-21</span>
-  </p>
+<header class="site-header page-pad">
+  <a class="masthead" href="#top" aria-label="Svarnam — home">
+    <span class="logo-bars" aria-hidden="true"><span class="lb-gold"></span><span class="lb-rust"></span><span class="lb-green"></span></span>
+    <span class="wordmark">Svarnam<span class="devanagari">स्वर्णम्</span></span>
+  </a>
+  <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+  <nav class="site-nav" id="siteNav" aria-label="Main">
+    <a href="#stack">The stack</a>
+    <a href="#wages">Wages</a>
+    <a href="#food">Food</a>
+    <a href="#method">Method</a>
+    <a href="#sources">Sources</a>
+    <a class="nav-pill" id="csvBtn" href="#">Data (CSV)</a>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
+  </nav>
 </header>
 
-<main>
-  <section id="monthly">
-    <h2>The monthly picture</h2>
-    <p class="section-note">Every month since October 2005 — the 2013 premium era, the 2020-26 surge, and the dips where India paid less than landed cost.</p>
-    <div class="chartbox"><div class="monthly-wrap"><canvas id="monthlyChart" role="img" aria-label="Monthly line-and-column chart of the rupee gold price since October 2005" aria-describedby="monthlyDesc"></canvas></div></div>
-    <p class="chart-desc" id="monthlyDesc">Each column is one month's Mumbai price. Premium-era months rise above their trend; grey-market months dip below it. Year labels mark each January.</p>
-  </section>
+<main class="page-pad" id="top">
+  <section class="hero text-col">
+    <p class="eyebrow">India · gold, decomposed</p>
+    <h1>What is India's gold price <em class="gold-it">made of.</em></h1>
+    <p class="hero-sub">Metal, dollar, tax, and the local premium — decomposed from public data alone, FY1985-86 → today. No opinions, just arithmetic.</p>
 
-  <section id="purchasing">
-    <h2>What a tola of gold buys</h2>
-    <p class="section-note">One tola — 11.66 grams, the unit India has bought gold in for generations — measured against work and food. Wage data end FY2023-24 (upstream lag); MSP runs on official crop years. Raw gram values stay in the tooltips and tables.</p>
-    <div class="pw-grid">
-      <div class="pw-panel">
-        <h3>Days of work</h3>
-        <p class="chart-title" id="wageTitle">…</p>
-        <div class="controls">
-          <label>Occupation: <select id="occupationSel"></select></label>
-          <span class="chip">WRRI · 20 states + All-India · monthly → FY averages</span>
-          <span class="chip chip-warn">occupation labels reclassified Nov 2013 — no official linking factor</span>
+    <div class="price-card">
+      <span class="price-chip">Data as of <span id="dataAsOf">…</span> · provisional</span>
+      <p class="price-big" id="bigPrice">…</p>
+      <p class="price-cap">per 10 g · Mumbai · FY <span id="bigPriceFy">…</span> average</p>
+
+      <div class="hero-bar-wrap">
+        <div class="hero-bar" id="heroBar" aria-hidden="true">
+          <span class="seg seg-metal" id="segMetal"></span>
+          <span class="seg seg-duty" id="segDuty"></span>
+          <span class="seg seg-gst" id="segGst"></span>
         </div>
-        <div class="chartbox"><canvas id="wageChart" role="img" aria-label="Line chart: days of the selected occupation's work needed to buy one tola of gold, by financial year" aria-describedby="wageDesc"></canvas></div>
-        <p class="chart-desc" id="wageDesc">The line shows how many days of the selected occupation's work one tola of gold costs each financial year. A rising line means gold grew dearer against that wage; a falling line means wages caught up.</p>
-        <details class="datatable"><summary>View data as table — raw grams per wage-day</summary><div id="wageTable"></div></details>
+        <span class="hero-marker" id="heroMarker"></span>
+        <span class="hero-hatch" id="heroHatch"></span>
       </div>
-      <div class="pw-panel">
-        <h3>Kilograms of food</h3>
-        <p class="chart-title" id="mspTitle">…</p>
-        <div class="controls">
-          <label>Crop: <select id="cropSel"></select></label>
-          <span class="chip">CACP · crop years as published</span>
-          <span class="chip chip-warn">rabi marketing year = crop year + 1 (wheat)</span>
-        </div>
-        <div class="chartbox"><canvas id="mspChart" role="img" aria-label="Line chart: kilograms of the selected crop bought by one tola of gold at the support price, by crop year" aria-describedby="mspDesc"></canvas></div>
-        <p class="chart-desc" id="mspDesc">The line shows how many kilograms of the selected crop one tola of gold bought at the Minimum Support Price each crop year. A falling line means food lost ground to gold.</p>
-        <details class="datatable"><summary>View data as table — raw grams per MSP-kg</summary><div id="mspTable"></div></details>
-      </div>
+      <p class="hero-bar-cap">Shares are of landed cost. The ink mark is the published Mumbai price; the hatched gap is the local discount.</p>
+
+      <div class="stat-tiles" id="statTiles"></div>
     </div>
   </section>
 
-  <section id="episodes">
+  <section class="section charts-col" id="stack">
+    <p class="eyebrow eyebrow-h">The stack</p>
+    <h2>Metal and the dollar set the price; Delhi and the market move the rest</h2>
+    <p class="lede">Every column is the Mumbai ₹/10g average split into four legs: world metal price × USD/INR, customs duty, GST, and the signed residual — hatched below the baseline when it discounts.</p>
+    <div class="section-card">
+      <div class="seg-control" role="group" aria-label="Chart resolution">
+        <button id="segAnnual" type="button" aria-pressed="true">Annual</button>
+        <button id="segMonthly" type="button" aria-pressed="false">Monthly</button>
+      </div>
+      <div class="chart-box chart-anim"><canvas id="stackChart" role="img" aria-label="Stacked columns: Mumbai rupee gold price per period, split into metal-plus-dollar, customs duty, GST and premium" aria-describedby="stackDesc"></canvas></div>
+      <p class="chart-desc" id="stackDesc">The rupee price of gold has risen in almost every decade since FY1985-86. The gold leg dominates every year; duty, GST and the hatched residual explain the rest. Dashed rules with numbered flags mark nine policy breaks — each is explained in the list under the chart.</p>
+      <h3 class="chart-title" style="margin-top:20px">The nine policy breaks on the chart</h3>
+      <ul id="breakList" class="chiplist"></ul>
+      <button class="toggle-btn" id="stackTableBtn" type="button" aria-expanded="false">View data as table</button>
+      <div id="stackTable" class="table-scroll" hidden></div>
+    </div>
+  </section>
+
+  <section class="section charts-col" id="wages">
+    <p class="eyebrow eyebrow-h">Wages</p>
+    <h2>A tola of gold, measured in days of work</h2>
+    <p class="lede">One tola — 11.66 grams, the unit India has bought gold in for generations — priced in the daily wage of the selected occupation. A rising line means gold grew dearer against that wage.</p>
+    <div class="section-card">
+      <label class="chart-sub" for="occupationSel">Occupation</label><br>
+      <select id="occupationSel" class="listbox" style="margin-bottom:12px"></select>
+      <div class="chart-box chart-anim"><canvas id="wageChart" role="img" aria-label="Line chart: days of the selected occupation's work needed to buy one tola of gold, by financial year" aria-describedby="wageDesc"></canvas></div>
+      <p class="chart-desc" id="wageDesc">The line shows how many days of the selected occupation's work one tola of gold costs each financial year. A rise means gold grew dearer against that wage; a fall means wages caught up. Wage data end FY2023-24 (upstream lag); the occupation labels were reclassified in November 2013 with no official linking factor.</p>
+      <button class="toggle-btn" id="wageTableBtn" type="button" aria-expanded="false">View data as table</button>
+      <div id="wageTable" class="table-scroll" hidden></div>
+    </div>
+  </section>
+
+  <section class="section charts-col" id="food">
+    <p class="eyebrow eyebrow-h">Food</p>
+    <h2>A tola of gold, measured in kilograms of grain</h2>
+    <p class="lede">One tola of gold against the Minimum Support Price of the selected crop, per crop year. A falling line means food lost ground to gold.</p>
+    <div class="section-card">
+      <label class="chart-sub" for="cropSel">Crop</label><br>
+      <select id="cropSel" class="listbox" style="margin-bottom:12px"></select>
+      <div class="chart-box chart-anim"><canvas id="mspChart" role="img" aria-label="Line chart: kilograms of the selected crop bought by one tola of gold at the support price, by crop year" aria-describedby="mspDesc"></canvas></div>
+      <p class="chart-desc" id="mspDesc">The line shows how many kilograms of the selected crop one tola of gold bought at the Minimum Support Price each crop year. Raw gram values stay in the table. Rabi marketing year = crop year + 1 for wheat.</p>
+      <button class="toggle-btn" id="mspTableBtn" type="button" aria-expanded="false">View data as table</button>
+      <div id="mspTable" class="table-scroll" hidden></div>
+    </div>
+  </section>
+
+  <section class="section charts-col" id="episodes">
+    <p class="eyebrow eyebrow-h">Episodes</p>
     <h2>Documented premium &amp; discount episodes</h2>
-    <p class="section-note">Dealer-quoted episodes from Reuters' "Asia Gold" reporting — restrictions and duty spikes push the local market to a premium; liberalisations and price spikes push it to a discount. These anchor the residual leg you see in the charts. Dollar-quoted dealer figures are shown in ₹/10g at each episode month's average USD/INR; the original quote stays in the source record.</p>
-    <ul id="episodeList" class="episodelist"></ul>
+    <p class="lede">Dealer-quoted episodes from Reuters' "Asia Gold" reporting — restrictions and duty spikes push the local market to a premium; liberalisations and price spikes push it to a discount. Dollar-quoted figures are shown in ₹/10g at each episode month's average USD/INR.</p>
+    <div class="section-card"><ul id="episodeList" class="episodelist"></ul></div>
   </section>
 
-  <section id="sgb" class="card">
-    <h2>The sovereign stopped selling its own instrument</h2>
-    <p>India launched Sovereign Gold Bonds on <strong>5 Nov 2015</strong> at <strong>₹2,684/g</strong> (2.75% interest) to shift household demand away from physical gold. Sixty-seven tranches and roughly 147 tonnes later, the last tranche issued on <strong>21 Feb 2024</strong> at ₹6,263/g. In <strong>Feb 2025</strong> the government confirmed the scheme's discontinuation — with a liability near <strong>₹1.12 lakh crore</strong> on ~132 t outstanding, gold's rise had made its own gold-linked borrowing too expensive.</p>
-    <p class="quote">"A rather fairly high-cost borrowing for the government… the government has chosen not to follow that path." — Economic Affairs Secretary, Feb 2025</p>
-    <p class="muted">Source S15 (PIB/RBI notifications as reported by Moneycontrol). The premium is so real the sovereign stopped selling its instrument.</p>
-  </section>
-
-  <section id="calculator">
-    <h2>Your own wage, in grams</h2>
-    <p class="section-note">Runs entirely in your browser — nothing is sent anywhere. Uses the latest monthly domestic price for the gold side.</p>
-    <div class="calc">
-      <label>Your daily wage (₹): <input id="calcWage" type="number" min="0" step="10" placeholder="e.g. 600"></label>
-      <label>Gold per gram (₹): <input id="calcPrice" type="number" step="1"></label>
-      <output id="calcOut">—</output>
+  <section class="section charts-col" id="sgb">
+    <div class="card">
+      <h2>The sovereign stopped selling its own instrument</h2>
+      <p>India launched Sovereign Gold Bonds on <strong>5 Nov 2015</strong> at <strong>₹2,684/g</strong> (2.75% interest) to shift household demand away from physical gold. Sixty-seven tranches and roughly 147 tonnes later, the last tranche issued on <strong>21 Feb 2024</strong> at ₹6,263/g. In <strong>Feb 2025</strong> the government confirmed the scheme's discontinuation — with a liability near <strong>₹1.12 lakh crore</strong> on ~132 t outstanding.</p>
+      <p class="quote">"A rather fairly high-cost borrowing for the government… the government has chosen not to follow that path." — Economic Affairs Secretary, Feb 2025</p>
+      <p class="chart-desc">Source S15 (PIB/RBI notifications as reported by Moneycontrol).</p>
     </div>
-    <p class="muted" id="calcNote"></p>
   </section>
 
-  <section id="methodology">
-    <h2>Methodology — an identity, not a model</h2>
-    <p>This page decomposes a <em>published</em> price; it computes no fair value and makes no valuation claim. For every period:</p>
-    <pre>metal+FX leg = London USD/troy-oz ÷ 31.1034768 × 10 × USD/INR
+  <section class="section charts-col" id="calculator">
+    <p class="eyebrow eyebrow-h">Calculator</p>
+    <h2>Your own wage, in grams</h2>
+    <p class="lede">Runs entirely in your browser — nothing is sent anywhere. Uses the latest monthly domestic price for the gold side.</p>
+    <div class="section-card">
+      <div class="calc">
+        <label>Your daily wage (₹): <input id="calcWage" type="number" min="0" step="10" placeholder="e.g. 600"></label>
+        <label>Gold per gram (₹): <input id="calcPrice" type="number" step="1"></label>
+        <output id="calcOut">—</output>
+      </div>
+      <p class="chart-desc" id="calcNote"></p>
+    </div>
+  </section>
+
+  <section class="section text-col" id="method">
+    <p class="eyebrow eyebrow-h">Method</p>
+    <h2>An identity, not a model</h2>
+    <p class="lede">This page decomposes a <em>published</em> price; it computes no fair value and makes no valuation claim. For every period:</p>
+    <div class="section-card">
+      <pre style="margin:0;overflow-x:auto;font-size:13px;line-height:1.7">metal+FX leg = London USD/troy-oz ÷ 31.1034768 × 10 × USD/INR
 duty leg     = day-weighted customs duty from the sourced calendar (specific ₹/10g era 1990-2011; BCD+AIDC+SWS ad-valorem era 2012→)
 GST leg      = 3% on the duty-paid value, from 1 Jul 2017 (day-weighted at the boundary)
 landed cost  = metal+FX + duty + GST
 premium leg  = Mumbai price − landed cost   (signed — a discount renders below the baseline)</pre>
-    <p>The premium residual is displayed, never judged. Reconciliation is enforced by the build: the four legs must sum back to the published price within ±0.5% every period, and golden values are checked against the source files on every build.</p>
-    <p><strong>Annual vs monthly bases:</strong> annual rows use RBI's official-rate series (Table 133, regime flags included); monthly rows (2005-10 →) use the Goldhub domestic price and the Fed H.10 market rate — both flagged on the rows. Excluded by design: livestock and land history (no national series exists), forward prices (we show none), state-wise layer (V2). Every figure above reconciles to its source in the <a href="#sourcesSec">source table</a>.</p>
+    </div>
+    <p class="chart-desc">The premium residual is displayed, never judged. Reconciliation is enforced by the build: the four legs must sum back to the published price within ±0.5% every period, and golden values are checked against the source files on every build. Annual rows use RBI's official-rate series (Table 133, regime flags included); monthly rows (2005-10 →) use the Goldhub domestic price and the Fed H.10 market rate. Excluded by design: livestock and land history (no national series exists), forward prices (we show none), state-wise layer (V2).</p>
   </section>
 
-  <section id="sourcesSec">
-    <h2>Sources — every number links home</h2>
-    <p class="section-note" id="sourcesStrip">15 public sources · URLs, access dates and license notes on record · raw downloads checksummed</p>
-    <details class="datatable sources-table">
-      <summary>Open the full source registry (15 rows)</summary>
-      <div id="sourcesTable"></div>
-    </details>
+  <section class="section text-col" id="sources">
+    <p class="eyebrow eyebrow-h">Sources</p>
+    <h2>Every number links home</h2>
+    <p class="lede">15 public sources · URLs, access dates and license notes on record · raw downloads checksummed.</p>
+    <div class="section-card">
+      <details class="datatable">
+        <summary>Open the full source registry (15 rows)</summary>
+        <div id="sourcesTable" class="table-scroll"></div>
+      </details>
+    </div>
   </section>
 </main>
 
-<footer id="disclaimer">
-  <p><strong>Model, not advice.</strong> This page decomposes published gold prices and compares them with public wage and support-price statistics. It contains no forecasts, no price targets, and no recommendation to buy, sell, or avoid anything. Every number links to its public source; if a source revises, we revise — the correction history appears beside the source registry. Data as of <span id="dataAsOf2">…</span>.</p>
-  <p>
-    <button id="csvBtn" type="button">Download the dataset (CSV)</button>
-    <a id="jsonLink" href="dataset.json">dataset.json</a> ·
-    <a href="sources.md">sources.md</a>
-  </p>
-  <p class="muted byline">Compiled and maintained by Shreshth Adlakha — one analyst, no institution. Questions or corrections: open an issue on the repository.</p>
-  <p class="muted">Code: MIT · Dataset &amp; charts: CC BY 4.0 · Built from public data only: RBI Handbook, LBMA (via Wayback), WGC Goldhub, Labour Bureau, CACP, FRED. Regime breaks annotated; provisional labels everywhere.</p>
-  <p id="fatalMsg" class="fatal hidden"></p>
+<footer class="page-pad">
+  <div class="text-col">
+    <p><strong>Model, not advice.</strong> This page decomposes published gold prices and compares them with public wage and support-price statistics. It contains no forecasts, no price targets, and no recommendation to buy, sell, or avoid anything. Every number links to its public source; if a source revises, we revise. Data as of <span id="dataAsOf2">…</span>.</p>
+    <p>
+      <button id="csvBtnFooter" type="button">Download the dataset (CSV)</button>
+      <a href="dataset.json">dataset.json</a> · <a href="sources.md">sources.md</a>
+    </p>
+    <p class="byline">Compiled and maintained by Shreshth Adlakha — one analyst, no institution. Questions or corrections: open an issue on the repository. Code: MIT · Dataset &amp; charts: CC BY 4.0.</p>
+  </div>
 </footer>
 
 <script src="assets/vendor/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
