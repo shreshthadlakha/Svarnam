@@ -1,5 +1,5 @@
 /* main.js — boot: load dataset.json, hydrate everything from it. Zero hardcoded numbers. */
-import { initCharts, syncRem, buildStack, buildWage, buildMsp, buildHeroBar, buildStatTiles, tableFor, cssVar, TOLA_G } from './charts.js';
+import { initCharts, syncRem, buildStack, buildWage, buildMsp, buildHeroBar, buildStatTiles, tableFor, cssVar } from './charts.js';
 import { wireCalculator } from './calculator.js';
 import { wireCsv } from './csv.js';
 
@@ -208,7 +208,8 @@ async function boot() {
 
     renderHero(data);
     buildStack(data, 'annual');
-    buildMonthly(data);
+    buildHeroBar(data);
+    buildStatTiles(data);
     wireSegControl(data);
     wirePurchasing(data);
     renderBreaks(data.policy.breaks);
