@@ -229,6 +229,17 @@ body {
   padding: clamp(20px, 3.5vw, 44px); box-shadow: var(--shadow);
 }
 
+/* ── chart containers (fixed height for maintainAspectRatio:false) ─────── */
+.chart-box { position: relative; height: 420px; }
+.pw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; align-items: start; }
+.pw-panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card);
+  padding: clamp(16px, 2.5vw, 28px);
+}
+.pw-panel h3 { font-family: var(--font-display); font-weight: 600; font-size: 20px; margin: 0 0 8px; color: var(--ink); }
+.pw-panel .chart-box { height: 260px; }
+@media (max-width: 880px) { .pw-grid { grid-template-columns: 1fr; } }
+
 /* ── segmented control ──────────────────────────────────────────────────── */
 .seg-control {
   display: inline-flex; background: var(--ground); border: 1px solid var(--line);
