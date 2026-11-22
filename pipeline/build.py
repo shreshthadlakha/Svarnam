@@ -283,15 +283,15 @@ def build(write=True, ci_mode=False):
             f.write(sources_mod.render_sources_md())
         with open(os.path.join(ROOT, "build_report.txt"), "w", encoding="utf-8") as f:
             f.write(report_txt)
-        # inject price into meta description
-        idx_path = os.path.join(SITE, "index.html")
-        if os.path.isfile(idx_path):
-            idx = open(idx_path, encoding="utf-8").read()
-            idx = idx.replace("{{PRICE_INR}}", f"{last_mumbai:,.0f}") if (last_mumbai := last.get("mumbai_inr_10g")) else idx
-            open(idx_path, "w", encoding="utf-8").write(idx)
-        # OG image
-        if last and last.get("mumbai_inr_10g"):
-            generate_og(last)
+        # inject price into meta description + generate OG image
+        last_row = decomp_annual[-1] if decomp_annual else None
+        if last_row:
+            idx_path = os.path.join(SITE, "index.html")
+            if os.path.isfile(idx_path):
+                idx = open(idx_path, encoding="utf-8").read()
+                idx = idx.replace("{{PRICE_INR}}", f"{last_row['mumbai_inr_10g']:,.0f}")
+                open(idx_path, "w", encoding="utf-8").write(idx)
+            generate_og(last_row)
     return dataset, report_txt
 
 
