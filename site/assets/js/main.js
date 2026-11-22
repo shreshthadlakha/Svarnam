@@ -152,8 +152,9 @@ function wirePurchasing(data) {
     const rerunWage = () => {
         const rows = buildWage(data, occSel.value);
         const last = rows[rows.length - 1];
-        if (last && last.grams > 0) {
-            $('#wageTitle').textContent = `One tola costs ${Math.round(TOLA / last.grams).toLocaleString('en-IN')} days of ${occSel.value} work (${last.fy})`;
+        const wt = $('#wageTitle');
+        if (wt && last && last.grams > 0) {
+            wt.textContent = `One tola costs ${Math.round(TOLA / last.grams).toLocaleString('en-IN')} days of ${occSel.value} work (${last.fy})`;
         }
         wireTableToggle('#wageTableBtn', '#wageTable', () => tableFor(
             rows.map(r => ({ fy: r.fy, 'days per tola': (TOLA / r.grams).toFixed(0), 'grams per day': r.grams }))));
@@ -161,8 +162,9 @@ function wirePurchasing(data) {
     const rerunMsp = () => {
         const rows = buildMsp(data, cropSel.value);
         const last = rows[rows.length - 1];
-        if (last && last.grams > 0) {
-            $('#mspTitle').textContent = `One tola bought ${Math.round(TOLA / last.grams).toLocaleString('en-IN')} kg of ${cropSel.value} (${last.crop_year})`;
+        const mt = $('#mspTitle');
+        if (mt && last && last.grams > 0) {
+            mt.textContent = `One tola bought ${Math.round(TOLA / last.grams).toLocaleString('en-IN')} kg of ${cropSel.value} (${last.crop_year})`;
         }
         wireTableToggle('#mspTableBtn', '#mspTable', () => tableFor(
             rows.map(r => ({ crop_year: r.crop_year, 'kg per tola': (TOLA / r.grams).toFixed(0), 'grams per kg': r.grams }))));
@@ -217,14 +219,16 @@ async function boot() {
     renderSources(data.sources);
     wireCalculator(data);
     wireCsv(data);
+    initScrollAnim();
 }
 
 boot().catch(err => {
+    window.__bootError = err;
     document.body.classList.add('fatal');
     const el = $('#fatalMsg');
     if (el) {
         el.classList.remove('hidden');
-        el.textContent = 'The dataset failed to load: ' + err.message + ' — every number on this page renders from dataset.json; without it there is nothing to show.';
+        el.textContent = 'The dataset failed to load: ' + err.message;
         const st = document.createElement('pre');
         st.id = 'fatalStack';
         st.textContent = err.stack || '(no stack)';
