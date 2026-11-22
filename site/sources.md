@@ -89,7 +89,7 @@ Every series on this page resolves to one of these ids. Access dates are the dat
 ## S13 — Reuters 'Asia Gold' premium/discount episodes (dealer quotes vs official landed prices)
 - URL: https://www.reuters.com/world/china/asia-gold-india-gold-discounts-hit-seven-week-high-demand-weakens-china-buying-2026-07-24
 - Local file: `data/policy/episodes.csv`
-- Coverage: documented episodes 2013-12→2026-07 (dated list in dive_05 §9)
+- Coverage: documented premium/discount episodes 2013-12→2026-07 (Reuters 'Asia Gold' dated list; magnitudes quoted, not a feed)
 - Accessed: 2026-11-20
 - License: press reporting; episode magnitudes quoted with dates, not reproduced as a feed
 

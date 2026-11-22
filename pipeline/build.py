@@ -2,6 +2,7 @@
 Runs validation first (fails hard), then derives and emits:
   site/dataset.json, site/sources.md, build_report.txt
 """
+import re
 import csv
 import json
 import os
@@ -17,6 +18,15 @@ from . import validate as validate_mod
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INTERIM = os.path.join(ROOT, "data", "interim")
 SITE = os.path.join(ROOT, "site")
+
+_JARGON = re.compile(r"dive[_ ]\d|scan[_ ]\d|\bs\d+\s*:", re.I)
+
+
+def lint_public_copy(episodes):
+    """Internal research identifiers must never reach the public page or CSV
+    (dive_06 recommendation; the owner call-out of the worst pre-review defect)."""
+    return [f"episodes {e['date']}: internal research identifier in public copy "
+            f"(event: {e['event'][:60]}...)" for e in episodes if _JARGON.search(e.get("event", ""))]
 
 
 def _read(name, numeric=()):
@@ -161,6 +171,7 @@ def build(write=True, ci_mode=False):
     ratios_msp = derive.gold_per_mspkg(decomp_annual, msp_annual)
 
     problems, notes, stats = validate_mod.run_all(decomp_annual, decomp_monthly, ci_mode=ci_mode)
+    problems += lint_public_copy(episodes)
     notes = notes + _merge_notes(t164_monthly, domestic_merged, merge_info,
                                  usd_monthly, usd_merged, usd_ext_months,
                                  lbma_daily is not None)

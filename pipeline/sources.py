@@ -105,7 +105,7 @@ SOURCES = {
         "name": "Reuters 'Asia Gold' premium/discount episodes (dealer quotes vs official landed prices)",
         "url": "https://www.reuters.com/world/china/asia-gold-india-gold-discounts-hit-seven-week-high-demand-weakens-china-buying-2026-07-24",
         "file": "data/policy/episodes.csv",
-        "coverage": "documented episodes 2013-12→2026-07 (dated list in dive_05 §9)",
+        "coverage": "documented premium/discount episodes 2013-12→2026-07 (Reuters 'Asia Gold' dated list; magnitudes quoted, not a feed)",
         "accessed": "2026-11-20",
         "license_note": "press reporting; episode magnitudes quoted with dates, not reproduced as a feed",
     },
