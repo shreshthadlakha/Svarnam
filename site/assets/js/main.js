@@ -28,8 +28,16 @@ function renderEpisodes(episodes) {
         strong.className = 'episelist-date';
         strong.textContent = e.date + ' — ';
         li.appendChild(strong);
-        li.appendChild(document.createTextNode(
-            e.usd_per_oz != null ? `${e.direction === 'premium' ? '+' : '−'}$${e.usd_per_oz}/oz · ` : `${e.direction} (size not documented) · `));
+        // rupee convention: dealer quotes are converted to ₹/10g at the episode
+        // month's average USD/INR (computed at build); the USD quote stays in the
+        // source record for provenance.
+        const sign = e.direction === 'premium' ? '+' : '−';
+        if (e.inr_10g_equiv != null) {
+            li.appendChild(document.createTextNode(
+                `${sign}₹${Math.round(e.inr_10g_equiv).toLocaleString('en-IN')}/10g · `));
+        } else {
+            li.appendChild(document.createTextNode(`${e.direction} (size not documented) · `));
+        }
         li.appendChild(document.createTextNode(e.event));
         ul.appendChild(li);
     });

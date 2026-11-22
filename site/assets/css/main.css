@@ -22,7 +22,11 @@ body {
 }
 main, .hero, footer { max-width: 960px; margin: 0 auto; padding: 0 16px; }
 .hero { padding-top: 28px; padding-bottom: 8px; }
-.brand { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; color: var(--muted); margin: 0; }
+.brand, .masthead { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px; }
+.wordmark { font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif; font-size: clamp(30px, 4.2vw, 40px); font-weight: 700; letter-spacing: -0.015em; color: var(--ink); line-height: 1; }
+.lozenge { display: inline-block; width: 0.42em; height: 0.42em; background: var(--gold); transform: rotate(45deg); margin-right: 0.4em; border-radius: 1px; }
+.masthead-tag { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.masthead-rule { border: none; border-top: 2px solid var(--ink); margin: 10px 0 20px; }
 h1 { font-size: clamp(26px, 5.4vw, 40px); line-height: 1.15; margin: 6px 0 10px; }
 h1 em { font-style: normal; color: var(--metal); border-bottom: 3px solid var(--gold); }
 .tagline { font-size: clamp(15px, 2.6vw, 18px); color: var(--muted); margin: 0 0 18px; }

@@ -9,7 +9,11 @@
 </head>
 <body>
 <header class="hero">
-  <p class="brand">Svarnam</p>
+  <div class="masthead">
+  <span class="wordmark"><span class="lozenge" aria-hidden="true"></span>Svarnam</span>
+  <span class="masthead-tag">what a tola of gold is made of</span>
+</div>
+<hr class="masthead-rule">
   <h1>What is India's rupee gold price <em>made of</em>?</h1>
   <p class="answer" id="answerLine">…</p>
 
@@ -81,7 +85,7 @@
 
   <section id="episodes">
     <h2>Documented premium &amp; discount episodes</h2>
-    <p class="section-note">Dealer-quoted episodes from Reuters' "Asia Gold" reporting — restrictions and duty spikes push the local market to a premium; liberalisations and price spikes push it to a discount. These anchor the residual leg you see in the charts.</p>
+    <p class="section-note">Dealer-quoted episodes from Reuters' "Asia Gold" reporting — restrictions and duty spikes push the local market to a premium; liberalisations and price spikes push it to a discount. These anchor the residual leg you see in the charts. Dollar-quoted dealer figures are shown in ₹/10g at each episode month's average USD/INR; the original quote stays in the source record.</p>
     <ul id="episodeList" class="episodelist"></ul>
   </section>
 
@@ -106,7 +110,7 @@
   <section id="methodology">
     <h2>Methodology — an identity, not a model</h2>
     <p>This page decomposes a <em>published</em> price; it computes no fair value and makes no valuation claim. For every period:</p>
-    <pre>metal+FX leg = London $/oz ÷ 31.1034768 × 10 × USD/INR
+    <pre>metal+FX leg = London USD/troy-oz ÷ 31.1034768 × 10 × USD/INR
 duty leg     = day-weighted customs duty from the sourced calendar (specific ₹/10g era 1990-2011; BCD+AIDC+SWS ad-valorem era 2012→)
 GST leg      = 3% on the duty-paid value, from 1 Jul 2017 (day-weighted at the boundary)
 landed cost  = metal+FX + duty + GST

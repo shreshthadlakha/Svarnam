@@ -94,7 +94,7 @@ const endLabels = {
 
 /* --- flagship callouts: two load-bearing moments ------------------------- */
 const CALLOUTS = [
-    { fy: '2013-14', text: '80:20 curbs: premiums to +$160/oz' },
+    { fy: '2013-14', text: '80:20 curbs: premiums spike' },
     { fy: '2024-25', text: 'Duty cut → discounts' },
 ];
 const calloutsPlugin = {

@@ -162,6 +162,20 @@ def build(write=True, ci_mode=False):
             w["n_months"] = int(w["n_months"])
     msp_annual = _read("msp_annual.csv", numeric=("inr_quintal",))
 
+    # rupee display convention: convert dollar-quoted dealer premiums/discounts to
+    # ₹/10g at each episode month's average USD/INR (fx_daily). The original USD
+    # quote stays in the source record.
+    fx_month = {}
+    for r in fx_daily:
+        fx_month.setdefault(r["date"][:7], []).append(r["usdinr"])
+    for e in episodes:
+        if e.get("usd_per_oz") is not None:
+            vals = fx_month.get(e["date"].strftime("%Y-%m"))
+            e["inr_10g_equiv"] = (round(e["usd_per_oz"] * (10.0 / 31.1034768)
+                                        * (sum(vals) / len(vals)))) if vals else None
+        else:
+            e["inr_10g_equiv"] = None
+
     decomp_annual = derive.decomposition_annual(gold_annual, fx_annual, cal)
     domestic_merged, merge_info = _merge_domestic_monthly(domestic_monthly, t164_monthly or [])
     usd_merged, usd_ext_months = _extend_usd_monthly(usd_monthly, lbma_daily or [])
